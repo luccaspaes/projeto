@@ -1,0 +1,7 @@
+{
+  "name": "homefit",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
