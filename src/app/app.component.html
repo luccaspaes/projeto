@@ -11,22 +11,25 @@
       </div>
 
     <ion-list class="menu-items" lines="none">
-      <ion-item>
+      <ion-item routerLink="/dashboard" routerLinkActive="active">
         <ion-icon name="pie-chart-outline"></ion-icon>Dashboard
+      
+        
       </ion-item>
-      <ion-item>
+      <ion-item  routerLink="/receitas" (click)="showReceitas" routerLinkActive="active">
         <ion-icon name="browsers-outline"></ion-icon>Receitas do Dia
+     
       </ion-item>
-      <ion-item class="active">
+      <ion-item routerLink="/acompanhamento">
         <ion-icon name="flash"></ion-icon>Acompanhamento
       </ion-item>
-      <ion-item>
+      <ion-item  routerLink="/messages" routerLinkActive="active">
         <ion-icon name="chatbubble-ellipses-outline"></ion-icon>Messages
       </ion-item>
-      <ion-item>
+      <ion-item routerLink="configs" routerLinkActive="active">
         <ion-icon name="heart-outline"></ion-icon>Configs
       </ion-item>
-      <ion-item>
+      <ion-item routerLink="signout" routerLinkActive="active">
         <ion-icon name="exit-outline"></ion-icon>Sign out
       </ion-item>
     </ion-list>

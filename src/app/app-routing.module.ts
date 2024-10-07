@@ -19,6 +19,31 @@ const routes: Routes = [
     path: 'registro',
     loadChildren: () => import('./pages/registro/registro.module').then(m => m.RegistroPageModule)
   },
+  {
+    path: 'receitas',
+    loadChildren: () => import('./receitas/receitas.module').then( m => m.ReceitasPageModule)
+  },  {
+    path: 'configs',
+    loadChildren: () => import('./configs/configs.module').then( m => m.ConfigsPageModule)
+  },
+  {
+    path: 'signout',
+    loadChildren: () => import('./signout/signout.module').then( m => m.SignoutPageModule)
+  },
+  {
+    path: 'acompanhamento',
+    loadChildren: () => import('./acompanhamento/acompanhamento.module').then( m => m.AcompanhamentoPageModule)
+  },
+  {
+    path: 'messages',
+    loadChildren: () => import('./messages/messages.module').then( m => m.MessagesPageModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
+  },
+
+
  
 
 ];
