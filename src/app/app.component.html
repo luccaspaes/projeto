@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-menu menuId="main-menu" contentId="main">
+  <ion-menu menuId="main-menu" contentId="main-content">
     <ion-content>
       <div class="menu-header-bg"></div>
       <div class="header-content">
@@ -16,7 +16,7 @@
       
         
       </ion-item>
-      <ion-item  routerLink="/receitas" (click)="showReceitas" routerLinkActive="active">
+      <ion-item  routerLink="/receitas"  routerLinkActive="active">
         <ion-icon name="browsers-outline"></ion-icon>Receitas do Dia
      
       </ion-item>
@@ -36,5 +36,5 @@
 
     </ion-content>
   </ion-menu>
-  <ion-router-outlet id="main"></ion-router-outlet>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-app>
