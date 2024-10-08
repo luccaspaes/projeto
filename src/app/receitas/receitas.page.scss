@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h2 {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    margin: 20px 0;
+  }
+
+  .recipe-grid ion-img {
+    width: 100%; /* A largura ocupa 100% do espaço disponível */
+    height: auto; /* A altura se ajusta automaticamente */
+    max-width: 200px; /* Definindo um limite máximo */
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .add-food-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+  }
+  
+  ion-button {
+    width: 100%;
+    max-width: 300px;
+    margin: 10px 0;
+  }
+
+
+  @media (min-width: 768px) {
+    .recipe-grid ion-img {
+      max-width: 300px;  /* Aumentando o tamanho das imagens para desktops */
+    }
+  }

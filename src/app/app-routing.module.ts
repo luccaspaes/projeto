@@ -22,7 +22,8 @@ const routes: Routes = [
   {
     path: 'receitas',
     loadChildren: () => import('./receitas/receitas.module').then( m => m.ReceitasPageModule)
-  },  {
+  },
+  {
     path: 'configs',
     loadChildren: () => import('./configs/configs.module').then( m => m.ConfigsPageModule)
   },
