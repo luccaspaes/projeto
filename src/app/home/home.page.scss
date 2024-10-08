@@ -25,3 +25,13 @@
 #container a {
   text-decoration: none;
 }
+
+ion-progress-bar {
+  margin-top: 10px;
+  --progress-background: #e0e0e0;
+  --progress-color: #4caf50; /* Pode ajustar a cor como preferir */
+}
+
+ion-footer {
+  background-color: #f0f0f0;
+}
