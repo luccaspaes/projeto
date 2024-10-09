@@ -1,6 +1,6 @@
 .login-container {
     padding: 20px;
-    text-align: center;
+    
   
     .title {
       font-size: 2rem;
@@ -31,11 +31,34 @@
     }
   }
 
-  :root {
-    --ion-color-facebook: #3b5998;  /* Cor oficial do Facebook */
-    --ion-color-facebook-rgb: 59, 89, 152;
-    --ion-color-facebook-contrast: #ffffff;
-    --ion-color-facebook-contrast-rgb: 255, 255, 255;
-    --ion-color-facebook-shade: #334d84;
-    --ion-color-facebook-tint: #4567a0;
-  }
+    .facebook-button {
+    --background: var(--ion-color-facebook);
+    --color: var(--ion-color-facebook-contrast);
+     }
+
+     .twitter-button {
+        --background: var(--ion-color-twitter);
+        --color: var(--ion-color-twitter-contrast);
+      }
+
+      .login-content {
+        --background: #ffffff; /* Cor de fundo opcional */
+        
+        .header-container {
+          text-align: left; /* Alinhamento à esquerda */
+          margin: 20px; /* Adiciona margem ao redor do contêiner */
+        }
+      
+        .homefit-title {
+          font-size: 3.5rem; /* Aumenta o tamanho do título */
+          color: #1e88e5; /* Azul similar ao usado na imagem */
+          font-weight: bold; /* Deixa o texto mais robusto */
+          margin-bottom: 2px; /* Espaçamento abaixo do título */
+        }
+      
+        .welcome-subtitle {
+          font-size: 2.0rem; /* Aumenta o tamanho do subtítulo */
+          color: #333333; /* Cor mais escura para o subtítulo */
+          font-weight: 300; /* Subtítulo com peso de fonte mais leve */
+        }
+      }

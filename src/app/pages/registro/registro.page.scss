@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens verticalmente */
+    padding: 20px; /* Adiciona um pouco de espaço interno */
+    height: 100%; /* Garante que a altura da container preencha o conteúdo */
+  }
+  
+  h2 {
+    margin-bottom: 20px; /* Espaço entre o título e o item */
+    font-size: 24px; /* Tamanho do texto do título */
+    color: #333; /* Cor do texto do título */
+  }
+  
+  ion-item {
+    margin-bottom: 20px; /* Espaço entre os items */
+    width: 100%; /* Faz o item ocupar toda a largura disponível */
+  }
+  
+  ion-button {
+    margin-top: 20px; /* Espaço acima do botão */
+  }
+  
+  .swiper-container {
+    width: 100%; /* Largura do swiper */
+    height: 200px; /* Altura do swiper */
+    margin-top: 20px; /* Espaço acima do swiper */
+  }
+  
+  .swiper-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo do slide */
+    justify-content: center; /* Centraliza o conteúdo do slide */
+    background: #f0f0f0; /* Cor de fundo do slide */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 20px; /* Espaçamento interno */
+    height: 100%; /* Altura do slide */
+  }
