@@ -1,13 +1,46 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>login</ion-title>
+    <ion-title>HomeFit</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">login</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="login-container">
+    <h1 class="title">HomeFit</h1>
+    <p class="welcome-text">Seja Bem Vindo!</p>
+
+    <!-- Campo de Email -->
+    <ion-item>
+      <ion-label position="floating">Email:</ion-label>
+      <ion-input type="email" required></ion-input>
+    </ion-item>
+
+    <!-- Campo de Senha -->
+    <ion-item>
+      <ion-label position="floating">Senha:</ion-label>
+      <ion-input type="password" required></ion-input>
+    </ion-item>
+
+    <!-- Manter conectado e Esqueceu sua senha? -->
+    <ion-item lines="none">
+      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-label>Mantenha me conectado</ion-label>
+      <ion-router-link class="forgot-password" routerLink="/forgot-password">
+        Esqueceu sua senha?
+      </ion-router-link>
+    </ion-item>
+
+    <!-- Botão Entrar -->
+    <ion-button expand="block" color="primary">Entrar</ion-button>
+
+    <!-- Link para registro -->
+    <p class="register-text">Não tem uma conta? <ion-router-link routerLink="/register">Registre agora</ion-router-link></p>
+
+    <!-- Botões de Login Social -->
+    <div class="social-login">
+      <ion-button expand="block" color="primary">Entrar com Facebook</ion-button>
+      <ion-button expand="block" color="danger">Entrar com Google+</ion-button>
+      <ion-button expand="block" color="twitter">Entrar com Twitter</ion-button>
+    </div>
+  </div>
 </ion-content>

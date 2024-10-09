@@ -1,0 +1,41 @@
+.login-container {
+    padding: 20px;
+    text-align: center;
+  
+    .title {
+      font-size: 2rem;
+      color: #007bff;
+    }
+  
+    .welcome-text {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+  
+    .forgot-password {
+      font-size: 0.9rem;
+      color: #007bff;
+    }
+  
+    .register-text {
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+  
+    .social-login {
+      margin-top: 20px;
+  
+      ion-button {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  :root {
+    --ion-color-facebook: #3b5998;  /* Cor oficial do Facebook */
+    --ion-color-facebook-rgb: 59, 89, 152;
+    --ion-color-facebook-contrast: #ffffff;
+    --ion-color-facebook-contrast-rgb: 255, 255, 255;
+    --ion-color-facebook-shade: #334d84;
+    --ion-color-facebook-tint: #4567a0;
+  }
