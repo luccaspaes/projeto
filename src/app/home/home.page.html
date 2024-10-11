@@ -1,86 +1,42 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      HomeFit
-    </ion-title>
     <ion-buttons slot="start">
-      <ion-menu-button menu="main-menu"></ion-menu-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-buttons slot="end">
-      <!-- Ícone de perfil -->
-      <ion-avatar>
-        <img src="assets/img/iconperfil.jpg" alt="Profile Image">
-      </ion-avatar>
-    </ion-buttons>
+    <ion-title>HomeFit</ion-title>
   </ion-toolbar>
 </ion-header>
 
+
+
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large"></ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="container">
+    <h2>Receitas</h2>
 
-  <div id="container">
-    <!-- Aqui começa a parte dos macronutrientes -->
-    <ion-card>
-      <ion-card-content>
-        <ion-grid>
-          <!-- Calorias -->
-          <ion-row>
-            <ion-col size="12">
-              <ion-item lines="none">
-                <ion-label>Calorias</ion-label>
-                <ion-badge slot="end">{{macronutrientes.calorias.consumidas}} Consumidas</ion-badge>
-              </ion-item>
-              <ion-progress-bar value="{{macronutrientes.calorias.consumidas / (macronutrientes.calorias.consumidas + macronutrientes.calorias.restantes)}}"></ion-progress-bar>
-              <ion-label>Restantes: {{macronutrientes.calorias.restantes}}</ion-label>
-            </ion-col>
-          </ion-row>
+    <div class="recipe-grid">
+      <ion-img src="assets/img/receita1.jpeg"></ion-img>
+      <ion-img src="assets/img/receita2.png"></ion-img>
+      <ion-img src="assets/img/receita3.png"></ion-img>
+      <ion-img src="assets/img/receita4.png"></ion-img>
+    </div>
 
-          <!-- Carboidratos -->
-          <ion-row>
-            <ion-col size="12">
-              <ion-item lines="none">
-                <ion-label>Carboidratos</ion-label>
-                <ion-badge slot="end">{{macronutrientes.carboidratos.consumidos}} / {{macronutrientes.carboidratos.meta}} g</ion-badge>
-              </ion-item>
-              <ion-progress-bar value="{{macronutrientes.carboidratos.consumidos / macronutrientes.carboidratos.meta}}"></ion-progress-bar>
-            </ion-col>
-          </ion-row>
+    <div class="add-food-container">
+      <ion-button expand="full">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Adicione alimento
+      </ion-button>
+      <ion-button expand="full">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Adicione alimento
+      </ion-button>
+      <ion-button expand="full">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Adicione alimento
+      </ion-button>
+    </div>
 
-          <!-- Proteínas -->
-          <ion-row>
-            <ion-col size="12">
-              <ion-item lines="none">
-                <ion-label>Proteínas</ion-label>
-                <ion-badge slot="end">{{macronutrientes.proteinas.consumidos}} / {{macronutrientes.proteinas.meta}} g</ion-badge>
-              </ion-item>
-              <ion-progress-bar value="{{macronutrientes.proteinas.consumidos / macronutrientes.proteinas.meta}}"></ion-progress-bar>
-            </ion-col>
-          </ion-row>
-
-          <!-- Gorduras -->
-          <ion-row>
-            <ion-col size="12">
-              <ion-item lines="none">
-                <ion-label>Gorduras</ion-label>
-                <ion-badge slot="end">{{macronutrientes.gorduras.consumidos}} / {{macronutrientes.gorduras.meta}} g</ion-badge>
-              </ion-item>
-              <ion-progress-bar value="{{macronutrientes.gorduras.consumidos / macronutrientes.gorduras.meta}}"></ion-progress-bar>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Texto de Café da Manhã -->
-    <ion-footer>
-      <ion-toolbar>
-        <ion-title text-center>Café da manhã</ion-title>
-      </ion-toolbar>
-    </ion-footer>
-    <!-- Fim da parte dos macronutrientes -->
+    <ion-button expand="full" color="primary">Buscar</ion-button>
   </div>
+
+  
 </ion-content>
