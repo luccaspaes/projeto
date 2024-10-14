@@ -17,7 +17,7 @@ export class RegistroPage implements OnInit {
   }
 
   continuar() {
-    this.navCtrl.navigateForward('/proxima-pagina');
+    this.navCtrl.navigateForward('/email');
   }
 
   inicializarSwiper() {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,29 +7,31 @@ import { Observable } from 'rxjs';
 })
 export class SpoonacularService {
   // URL base da API
-  private apiUrl = 'https://platform.fatsecret.com/rest/server.api';
-  private authUrl = 'https://oauth.fatsecret.com/connect/token';
+  private apiKey = '95206646e8b2486eb8f9ddc3199b66d2';
+  private apiUrl = 'https://api.spoonacular.com/recipes';
 
-  // Suas credenciais que você pegou no site do FatSecret
-  private consumerKey = '087f0fbce31b4a128e1f84bfd05042f5';
-  private consumerSecret = '1a16bacc498b492ea65d4f11cb8c8eea';
+ 
+  
 
   constructor(private http: HttpClient) {}
 
-  // Função para obter o Access Token
-  getAccessToken(): Observable<any> {
+  // Função para buscar receitas aleatórias da API
+  getRandomRecipes(): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/json'
     });
 
-    // Parâmetros necessários para a requisição de token
-    const body = new HttpParams()
-      .set('grant_type', 'client_credentials') // Tipo da requisição OAuth
-      .set('client_id', this.consumerKey) // Usando a consumerKey
-      .set('client_secret', this.consumerSecret); // Usando a consumerSecret
+    // Fazendo a chamada à API com a sua chave
+    return this.http.get(`${this.apiUrl}/random?number=5&apiKey=${this.apiKey}`, { headers });
+  }
 
-    // Aqui o link do token está sendo usado para fazer a requisição
-    return this.http.post(this.authUrl, body.toString(), { headers });
+  // Função para buscar uma receita por ID
+  getRecipeById(recipeId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/${recipeId}/information?apiKey=${this.apiKey}`, { headers });
   }
 }
 

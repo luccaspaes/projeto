@@ -14,14 +14,16 @@
     <h2>Receitas</h2>
 
     <div class="recipe-grid">
-      <ion-img src="assets/img/receita1.jpeg"></ion-img>
-      <ion-img src="assets/img/receita2.png"></ion-img>
-      <ion-img src="assets/img/receita3.png"></ion-img>
-      <ion-img src="assets/img/receita4.png"></ion-img>
+      <div *ngFor="let recipe of recipeData">
+        <ion-img [src]="recipe.image"></ion-img>
+        <p>{{ recipe.title }}</p>
+
+      </div>
+      
     </div>
 
     <div class="add-food-container">
-      <ion-button expand="full">
+      <ion-button expand="full" >
         <ion-icon slot="start" name="add-circle-outline"></ion-icon>
         Adicione alimento
       </ion-button>
@@ -35,7 +37,7 @@
       </ion-button>
     </div>
 
-    <ion-button expand="full" color="primary">Buscar</ion-button>
+    <ion-button expand="full" color="primary" (click)="getRecipes()">Buscar</ion-button>
   </div>
 
   

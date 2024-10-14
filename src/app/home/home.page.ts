@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SpoonacularService } from '../services/spoonacular.service';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,25 @@ export class HomePage {
     gorduras: { consumidos: 32, meta: 68 }
   };
 
-  constructor() {}
+  recipeData: any[] = [];
 
+  constructor(private spoonacularService: SpoonacularService) {}
+
+  ngOnInit() {
+    this.getRecipes();
+  }
+
+
+  getRecipes() {
+    this.spoonacularService.getRandomRecipes().subscribe(
+      (response) => {
+        this.recipeData = response.recipes;
+        console.log('Receitas obtidas:', this.recipeData);
+      },
+      (error) => {
+        console.error('Erro ao obter receitas:', error);
+      }
+    );
+  }
 }
+

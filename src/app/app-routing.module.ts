@@ -42,7 +42,19 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
+  },  {
+    path: 'senha',
+    loadChildren: () => import('./senha/senha.module').then( m => m.SenhaPageModule)
   },
+  {
+    path: 'sucesso',
+    loadChildren: () => import('./sucesso/sucesso.module').then( m => m.SucessoPageModule)
+  },
+  {
+    path: 'email',
+    loadChildren: () => import('./email/email.module').then( m => m.EmailPageModule)
+  },
+
 
 
  
