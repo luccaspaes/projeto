@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { Swiper } from 'swiper';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-registro',
@@ -8,24 +8,25 @@ import { Swiper } from 'swiper';
   styleUrls: ['./registro.page.scss'],
 })
 export class RegistroPage implements OnInit {
-  swiper: Swiper | null = null; // Inicializa como null
+  registroForm!: FormGroup; // FormGroup garantido com '!', será inicializado depois
 
-  constructor(private navCtrl: NavController) {}
+  constructor(
+    private navCtrl: NavController,
+    private fb: FormBuilder // Injeta o FormBuilder
+  ) {}
 
   ngOnInit() {
-    this.inicializarSwiper();
+    // Inicialização do FormGroup com um campo 'nome'
+    this.registroForm = this.fb.group({
+      nome: ['', [Validators.required]], // Validação: campo 'nome' obrigatório
+    });
   }
 
   continuar() {
-    this.navCtrl.navigateForward('/email');
-  }
-
-  inicializarSwiper() {
-    this.swiper = new Swiper('.swiper-container', {
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-    });
+    if (this.registroForm.valid) {
+      this.navCtrl.navigateForward('/email'); // Navega para a próxima página se válido
+    } else {
+      console.log('Formulário inválido');
+    }
   }
 }

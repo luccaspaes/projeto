@@ -9,38 +9,56 @@
     <h1 class="title">HomeFit</h1>
     <p class="welcome-text">Seja Bem Vindo!</p>
 
-    <!-- Campo de Email -->
-    <ion-item>
-      <ion-label position="floating">Email:</ion-label>
-      <ion-input type="email" required></ion-input>
-    </ion-item>
-
-    <!-- Campo de Senha -->
-    <ion-item>
-      <ion-label position="floating">Senha:</ion-label>
-      <ion-input type="password" required></ion-input>
-    </ion-item>
-
-    <!-- Manter conectado e Esqueceu sua senha? -->
-    <ion-item lines="none">
-      <ion-checkbox slot="start"></ion-checkbox>
-      <ion-label>Mantenha me conectado</ion-label>
-      <ion-router-link class="forgot-password" routerLink="/forgot-password">
-        Esqueceu sua senha?
-      </ion-router-link>
-    </ion-item>
-
-    <!-- Botão Entrar -->
-    <ion-button expand="block" color="primary">Entrar</ion-button>
-
-    <!-- Link para registro -->
-    <p class="register-text">Não tem uma conta? <ion-router-link routerLink="/registro" routerLinkActive="active">Registre-se agora</ion-router-link></p>
-
-    <!-- Botões de Login Social -->
-    <div class="social-login">
-      <ion-button expand="block" class="facebook-button">Entrar com Facebook</ion-button>
-      <ion-button expand="block" color="danger">Entrar com Google+</ion-button>
-      <ion-button expand="block" class="twitter-button">Entrar com Twitter</ion-button>
-    </div>
-  </div>
-</ion-content>
+    <ion-content [fullscreen]="true">
+      <div class="login-container">
+        <h1 class="title">HomeFit</h1>
+        <p class="welcome-text">Seja Bem Vindo!</p>
+    
+        <!-- Remova o ion-content extra abaixo -->
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <!-- Campo de Email -->
+          <ion-item>
+            <ion-label position="floating">Email:</ion-label>
+            <ion-input formControlName="email" type="email" placeholder="Seu email"></ion-input>
+          </ion-item>
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            <p *ngIf="loginForm.get('email')?.hasError('required')">O e-mail é obrigatório.</p>
+            <p *ngIf="loginForm.get('email')?.hasError('email')">Por favor, insira um e-mail válido.</p>
+          </div>
+    
+          <!-- Campo de Senha -->
+          <ion-item>
+            <ion-label position="floating">Senha:</ion-label>
+            <ion-input formControlName="password" type="password" placeholder="Sua senha"></ion-input>
+          </ion-item>
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <p *ngIf="loginForm.get('password')?.hasError('required')">A senha é obrigatória.</p>
+            <p *ngIf="loginForm.get('password')?.hasError('minlength')">A senha deve ter no mínimo 6 caracteres.</p>
+          </div>
+    
+          <!-- Manter conectado e Esqueceu sua senha? -->
+          <ion-item lines="none">
+            <ion-checkbox slot="start"></ion-checkbox>
+            <ion-label>Mantenha me conectado</ion-label>
+            <ion-router-link class="forgot-password" routerLink="/forgot-password">
+              Esqueceu sua senha?
+            </ion-router-link>
+          </ion-item>
+    
+          <!-- Botão Entrar -->
+          <ion-button expand="block" type="button" [disabled]="loginForm.invalid" (click)="login()" [routerLink]="loginForm.valid ? '/home' : null" routerLinkActive="active">
+            Entrar
+          </ion-button>
+    
+          <!-- Link para registro -->
+          <p class="register-text">Não tem uma conta? <ion-router-link routerLink="/registro" routerLinkActive="active">Registre-se agora</ion-router-link></p>
+    
+          <!-- Botões de Login Social -->
+          <div class="social-login">
+            <ion-button expand="block" class="facebook-button">Entrar com Facebook</ion-button>
+            <ion-button expand="block" color="danger">Entrar com Google+</ion-button>
+            <ion-button expand="block" class="twitter-button">Entrar com Twitter</ion-button>
+          </div>
+        </form>
+      </div>
+    </ion-content>

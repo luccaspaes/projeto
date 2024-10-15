@@ -7,15 +7,28 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBJIuuj83mE_cf9g5eGPb9juwgSKXa-l7o",
-  authDomain: "homefit-9395b.firebaseapp.com",
-  projectId: "homefit-9395b",
-  storageBucket: "homefit-9395b.appspot.com",
-  messagingSenderId: "252702106053",
-  appId: "1:252702106053:web:6b40b11576bc9423626bac",
-  measurementId: "G-JPH586J5QC"
+  apiKey: "AIzaSyBI-RC64PZ18hcqGGi6nhYNbf7Uaabf95o",
+  authDomain: "homefit-493ec.firebaseapp.com",
+  projectId: "homefit-493ec",
+  storageBucket: "homefit-493ec.appspot.com",
+  messagingSenderId: "875455240235",
+  appId: "1:875455240235:web:0568ef74d5d13f2978326e",
+  measurementId: "G-KPM4098M0R"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
+export const environment = {
+  production: false,
+  firebaseConfig: {
+    apiKey: "AIzaSyBI-RC64PZ18hcqGGi6nhYNbf7Uaabf95o",
+    authDomain: "homefit-493ec.firebaseapp.com",
+    projectId: "homefit-493ec",
+    storageBucket: "homefit-493ec.appspot.com",
+    messagingSenderId: "875455240235",
+    appId: "1:875455240235:web:0568ef74d5d13f2978326e",
+    measurementId: "G-KPM4098M0R"
+  }
+};

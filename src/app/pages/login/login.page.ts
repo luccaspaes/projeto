@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -7,22 +8,27 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  email: string = '';  // Variável para o email
-  password: string = '';  // Variável para a senha
+  loginForm!: FormGroup;
 
-  constructor(private navCtrl: NavController) { }
+  constructor(private navCtrl: NavController, private fb: FormBuilder) {}
 
   ngOnInit() {
+    // Definir as validações para os campos de e-mail e senha
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]], // E-mail obrigatório e deve ser válido
+      password: ['', [Validators.required, Validators.minLength(6)]], // Senha obrigatória e com no mínimo 6 caracteres
+    });
   }
 
   // Função para efetuar o login
   login() {
-    if (this.email && this.password) {
-      console.log('Email:', this.email, 'Senha:', this.password);
+    if (this.loginForm.valid) {
+      console.log('Email:', this.loginForm.value.email, 'Senha:', this.loginForm.value.password);
       // Aqui você pode adicionar sua lógica de autenticação
       // Exemplo: chamar um serviço de autenticação
+      this.navCtrl.navigateForward('/home'); // Navegação após o login bem-sucedido
     } else {
-      console.log('Por favor, preencha todos os campos.');
+      console.log('Por favor, preencha todos os campos corretamente.');
     }
   }
 
