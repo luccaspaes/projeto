@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';  // Importando o Router
 
 @Component({
   selector: 'app-login',
@@ -10,35 +13,48 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private navCtrl: NavController, private fb: FormBuilder) {}
+  constructor(
+    private router: Router,  // Usando Router
+    private navCtrl: NavController, 
+    private fb: FormBuilder, 
+    private authService: AuthService,  
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
-    // Definir as validações para os campos de e-mail e senha
+    // Definindo o FormGroup com as validações
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], // E-mail obrigatório e deve ser válido
-      password: ['', [Validators.required, Validators.minLength(6)]], // Senha obrigatória e com no mínimo 6 caracteres
+      email: ['', [Validators.required, Validators.email]], 
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  // Função para efetuar o login
-  login() {
+  // Função para autenticar o usuário
+  async autenticar() {
     if (this.loginForm.valid) {
-      console.log('Email:', this.loginForm.value.email, 'Senha:', this.loginForm.value.password);
-      // Aqui você pode adicionar sua lógica de autenticação
-      // Exemplo: chamar um serviço de autenticação
-      this.navCtrl.navigateForward('/home'); // Navegação após o login bem-sucedido
+      try {
+        // Passando os valores do formulário
+        await this.authService.login(this.loginForm.value.email, this.loginForm.value.password);
+
+        // Navegando para a página home se o login for bem-sucedido
+        this.router.navigate(['/home']);
+      } catch (error: unknown) {
+        // Tratando o erro e exibindo um alerta
+        const errorMessage = (error as Error).message || 'Erro desconhecido';
+        this.presentAlert('Erro de autenticação', errorMessage);
+      }
     } else {
-      console.log('Por favor, preencha todos os campos corretamente.');
+      this.presentAlert('Erro', 'Por favor, preencha todos os campos corretamente.');
     }
   }
 
-  // Função para navegar para a página de recuperação de senha
-  forgotPassword() {
-    this.navCtrl.navigateForward('/forgot-password');
-  }
-
-  // Função para navegar para a página de registro
-  register() {
-    this.navCtrl.navigateForward('/register');
+  // Função para exibir alertas
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 }

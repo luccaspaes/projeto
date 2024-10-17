@@ -3,20 +3,41 @@
     <ion-buttons slot="start">
       <ion-back-button text="Voltar"></ion-back-button>
     </ion-buttons>
-    <ion-title>email</ion-title>
+    <ion-title>Email</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="container">
-    <ion-item>
-      <ion-label position="floating">E-mail</ion-label>
-      <ion-input type="email" placeholder="Digite o e-mail"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Repita o e-mail</ion-label>
-      <ion-input type="email" placeholder="Digite o e-mail novamente"></ion-input>
-    </ion-item>
-    <ion-button routerLink="/senha" routerLinkActive="active" expand="block">Continuar</ion-button>
+    <!-- Formulário Reativo -->
+    <form [formGroup]="emailForm" (ngSubmit)="onSubmit()">
+      <!-- Campo de E-mail -->
+      <ion-item>
+        <ion-label position="floating">E-mail</ion-label>
+        <ion-input formControlName="email" type="email" placeholder="Digite o e-mail"></ion-input>
+      </ion-item>
+      <!-- Mensagem de erro para campo E-mail -->
+      <div *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched">
+        <p *ngIf="emailForm.get('email')?.hasError('required')">O e-mail é obrigatório.</p>
+        <p *ngIf="emailForm.get('email')?.hasError('email')">Por favor, insira um e-mail válido.</p>
+      </div>
+
+      <!-- Campo de Repete E-mail -->
+      <ion-item>
+        <ion-label position="floating">Repita o e-mail</ion-label>
+        <ion-input formControlName="confirmEmail" type="email" placeholder="Digite o e-mail novamente"></ion-input>
+      </ion-item>
+      <!-- Mensagem de erro para campo de Repete E-mail -->
+      <div *ngIf="emailForm.get('confirmEmail')?.invalid && emailForm.get('confirmEmail')?.touched">
+        <p *ngIf="emailForm.get('confirmEmail')?.hasError('required')">O e-mail é obrigatório.</p>
+        <p *ngIf="emailForm.get('confirmEmail')?.hasError('email')">Por favor, insira um e-mail válido.</p>
+        <p *ngIf="emailForm.hasError('emailMismatch')">Os e-mails não coincidem.</p>
+      </div>
+
+      <!-- Botão Continuar -->
+      <ion-button type="submit" [disabled]="emailForm.invalid" expand="block">
+        Continuar
+      </ion-button>
+    </form>
   </div>
 </ion-content>

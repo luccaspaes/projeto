@@ -9,14 +9,28 @@
 
 <ion-content [fullscreen]="true">
   <div class="container">
-    <ion-item>
-      <ion-label position="floating">Senha</ion-label>
-      <ion-input type="password" placeholder="Digite a senha"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Repita a senha</ion-label>
-      <ion-input type="password" placeholder="Digite a senha novamente"></ion-input>
-    </ion-item>
-    <ion-button routerLink="/sucesso" routerLinkActive="active" expand="block">Continuar</ion-button>
+    <form [formGroup]="senhaForm" (ngSubmit)="onSubmit()">
+      <!-- Campo de Senha -->
+      <ion-item>
+        <ion-label position="floating">Senha</ion-label>
+        <ion-input type="password" placeholder="Digite sua senha" formControlName="senha"></ion-input>
+      </ion-item>
+      <div *ngIf="senhaForm.get('senha')?.invalid && senhaForm.get('senha')?.touched">
+        <p *ngIf="senhaForm.get('senha')?.hasError('required')">A senha é obrigatória.</p>
+        <p *ngIf="senhaForm.get('senha')?.hasError('minlength')">A senha deve ter no mínimo 6 caracteres.</p>
+      </div>
+
+      <!-- Campo de Confirmar Senha -->
+      <ion-item>
+        <ion-label position="floating">Confirme a Senha</ion-label>
+        <ion-input type="password" placeholder="Confirme sua senha" formControlName="confirmSenha"></ion-input>
+      </ion-item>
+      <div *ngIf="senhaForm.get('confirmSenha')?.invalid && senhaForm.get('confirmSenha')?.touched">
+        <p *ngIf="senhaForm.get('confirmSenha')?.hasError('required')">A confirmação da senha é obrigatória.</p>
+        <p *ngIf="senhaForm.hasError('senhaMismatch')">As senhas não coincidem.</p>
+      </div>
+
+      <ion-button expand="block" type="submit" [disabled]="senhaForm.invalid">Continuar</ion-button>
+    </form>
   </div>
 </ion-content>

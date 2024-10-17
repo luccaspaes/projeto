@@ -29,4 +29,6 @@ export class RegistroPage implements OnInit {
       console.log('Formulário inválido');
     }
   }
+
+  
 }
