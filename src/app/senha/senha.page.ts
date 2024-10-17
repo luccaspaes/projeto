@@ -41,20 +41,22 @@ export class SenhaPage implements OnInit {
     return senha && confirmSenha && senha === confirmSenha ? null : { senhaMismatch: true };
   }
 
-   // Método chamado quando o formulário é submetido
-   onSubmit() {
+    // Método chamado quando o formulário é submetido
+  onSubmit() {
     if (this.senhaForm.valid) {
       const senha = this.senhaForm.value.senha;
       console.log('Senha:', senha);
+      console.log('Email:', this.email);  // Verifica se o e-mail foi recuperado corretamente
 
       // Chama o serviço de criação de usuário com o e-mail e a senha
       this.authService.createUserWithEmailAndPassword(this.email, senha).then(() => {
-        console.log('Usuário criado com sucesso! Redirecionando...');
-        // Navega para a página de sucesso
+        console.log('Usuário criado com sucesso! Redirecionando para /sucesso');
         this.navCtrl.navigateForward('/sucesso');
       }).catch((error: unknown) => {
         console.error('Erro ao criar o usuário:', error);
       });
+    } else {
+      console.log('Formulário inválido');  // Caso o formulário seja inválido
     }
   }
 }

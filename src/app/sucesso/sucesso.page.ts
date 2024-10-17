@@ -14,23 +14,16 @@ export class SucessoPage implements OnInit {
 
   ngOnInit() {
 
-      // Enviar e-mail de verificação
-      this.sendVerificationEmail();
-  }
-
-  // Função para enviar o e-mail de verificação
-  async sendVerificationEmail() {
-    try {
-      await this.authService.sendVerificationEmail();
-      console.log('E-mail de verificação enviado');
+     // Envia a verificação de e-mail quando o usuário acessar esta página
+     this.authService.sendEmailVerification().then(() => {
+      console.log('E-mail de verificação enviado!');
       
-      // Redireciona para a página inicial do aplicativo após 3 segundos
+      // Redireciona para a home após alguns segundos
       setTimeout(() => {
-        this.navCtrl.navigateRoot('/home');  // Ou para qualquer página do seu app
-      }, 3000);  // 3 segundos
-    } catch (error) {
+        this.navCtrl.navigateRoot('/home');
+      }, 3000);  // 3 segundos de espera
+    }).catch((error: unknown) => {
       console.error('Erro ao enviar o e-mail de verificação:', error);
-    }
+    });
   }
-
 }

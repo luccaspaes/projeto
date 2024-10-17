@@ -37,16 +37,10 @@ export class EmailPage implements OnInit {
       const email = this.emailForm.value.email;
       console.log('Email submetido:', email);
   
-      // Cria o novo usuário com o email, mas sem enviar o e-mail de verificação ainda
-      const password = 'defaultPassword'; // Defina ou gere uma senha segura de acordo com a necessidade
-      this.authService.createUserWithEmailAndPassword(email, password).then(() => {
-        // Navega para a página de senha, passando o e-mail como parâmetro
+        // Navega para a página de senha e passa o e-mail via queryParams
         this.navCtrl.navigateForward(['/senha'], { queryParams: { email: email } });
-      }).catch((error: unknown) => {
-        console.error('Erro ao criar o usuário:', error);
-      });
-    } else {
-      console.log('Por favor, preencha todos os campos corretamente.');
+      } else {
+        console.log('Formulário inválido');  // Caso o formulário seja inválido
+      }
     }
   }
-}
