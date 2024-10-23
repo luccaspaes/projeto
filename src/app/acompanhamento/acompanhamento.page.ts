@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SpoonacularService } from '../services/spoonacular.service';
+import { Chart, BarController, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
 
 
 @Component({
@@ -22,7 +24,11 @@ export class AcompanhamentoPage implements OnInit {
 
   ngOnInit() {
     // Código de inicialização aqui, se necessário
-    this.carregarHistoricoSemanal();
+   
+  }
+
+  ionViewDidEnter() {
+    this.createWeeklyProgressChart();
   }
 
 
@@ -54,6 +60,49 @@ export class AcompanhamentoPage implements OnInit {
     this.macronutrientes.calorias.restantes = 2000 - this.macronutrientes.calorias.consumidas; // Exemplo de meta de 2000 calorias
   }
 
+   // Função para ser chamada quando o card de calorias for clicado
+   viewCaloriasDetails() {
+    // Exemplo de lógica: exibir um alerta com detalhes das calorias
+    alert(`Meta de Calorias: ${this.macronutrientes.calorias.meta}\nConsumidas: ${this.macronutrientes.calorias.consumidas}`);
+
+    // Se você quiser navegar para outra página, pode usar o NavController
+    // this.navCtrl.navigateForward('/detalhes-calorias');
+  }
+
+  createWeeklyProgressChart() {
+    // Registrando componentes necessários
+    Chart.register(BarController, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+    const canvas = document.getElementById('weeklyProgressChart') as HTMLCanvasElement;
+    const ctx = canvas?.getContext('2d');
+
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+          datasets: [{
+            label: 'Calorias Consumidas',
+            data: [1200, 1500, 1300, 1600, 1800, 1700, 1900],
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    } else {
+      console.error('Erro: O contexto 2D do canvas não foi encontrado.');
+    }
+  }
   
 
 }

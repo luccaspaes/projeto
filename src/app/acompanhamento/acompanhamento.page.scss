@@ -1,0 +1,19 @@
+#container {
+    background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+    padding: 16px;
+  }
+
+
+  ion-card {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  ion-progress-bar {
+    transition: width 0.5s ease-in-out;
+  }
+
+
+  canvas {
+    width: 100%;
+    height: 300px; /* Defina um tamanho adequado conforme sua necessidade */
+  }
