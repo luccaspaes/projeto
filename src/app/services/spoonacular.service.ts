@@ -27,5 +27,19 @@ export class SpoonacularService {
     const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=${this.apiKey}`;
     return this.http.get<any>(url);
   }
+
+    // Exemplo de função para obter dados de nutrição por ingrediente
+    getNutritionByIngredient(ingredient: string): Observable<any> {
+      return this.http.get(`${this.apiUrl}food/ingredients/search?query=${ingredient}&apiKey=${this.apiKey}`);
+    }
+  
+    // Função para obter histórico semanal - ajuste o endpoint conforme a necessidade da API
+    getWeeklyHistory(userId: string): Observable<any> {
+      // Essa URL precisa ser ajustada para a endpoint correta da API Spoonacular que forneça o histórico de consumo
+      return this.http.get(`${this.apiUrl}users/${userId}/weeklyHistory?apiKey=${this.apiKey}`);
+    }
+
+
+
 }
  

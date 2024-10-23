@@ -23,23 +23,23 @@
   </ion-header>
 
   <div id="container">
-    <!-- Aqui começa a parte dos macronutrientes -->
     <ion-card>
+      <ion-card-header>
+        <ion-card-title>Resumo Diário</ion-card-title>
+        <ion-label>Calorias Meta: {{macronutrientes.calorias.meta}}</ion-label>
+      </ion-card-header>
       <ion-card-content>
         <ion-grid>
-          <!-- Calorias -->
           <ion-row>
             <ion-col size="12">
               <ion-item lines="none">
                 <ion-label>Calorias</ion-label>
                 <ion-badge slot="end">{{macronutrientes.calorias.consumidas}} Consumidas</ion-badge>
               </ion-item>
-              <ion-progress-bar value="{{macronutrientes.calorias.consumidas / (macronutrientes.calorias.consumidas + macronutrientes.calorias.restantes)}}"></ion-progress-bar>
-              <ion-label>Restantes: {{macronutrientes.calorias.restantes}}</ion-label>
+              <ion-progress-bar value="{{macronutrientes.calorias.consumidas / macronutrientes.calorias.meta}}"></ion-progress-bar>
+              <ion-label>Restantes: {{macronutrientes.calorias.meta - macronutrientes.calorias.consumidas}}</ion-label>
             </ion-col>
           </ion-row>
-
-          <!-- Carboidratos -->
           <ion-row>
             <ion-col size="12">
               <ion-item lines="none">
@@ -49,8 +49,6 @@
               <ion-progress-bar value="{{macronutrientes.carboidratos.consumidos / macronutrientes.carboidratos.meta}}"></ion-progress-bar>
             </ion-col>
           </ion-row>
-
-          <!-- Proteínas -->
           <ion-row>
             <ion-col size="12">
               <ion-item lines="none">
@@ -60,8 +58,6 @@
               <ion-progress-bar value="{{macronutrientes.proteinas.consumidos / macronutrientes.proteinas.meta}}"></ion-progress-bar>
             </ion-col>
           </ion-row>
-
-          <!-- Gorduras -->
           <ion-row>
             <ion-col size="12">
               <ion-item lines="none">
@@ -75,12 +71,13 @@
       </ion-card-content>
     </ion-card>
 
-    <!-- Texto de Café da Manhã -->
-    <ion-footer>
-      <ion-toolbar>
-        <ion-title text-center>Café da manhã</ion-title>
-      </ion-toolbar>
-    </ion-footer>
-    <!-- Fim da parte dos macronutrientes -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Histórico da Semana</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <canvas id="weeklyProgressChart"></canvas> <!-- Placeholder para gráfico semanal -->
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
