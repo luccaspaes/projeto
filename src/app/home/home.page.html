@@ -7,52 +7,94 @@
   </ion-toolbar>
 </ion-header>
 
-
-
 <ion-content [fullscreen]="true">
   <div class="container">
     <h2>Receitas</h2>
 
-    <div class="recipe-grid">
-      <div *ngFor="let recipe of recipeData">
-        <ion-img [src]="recipe.image"></ion-img>
-        <p>{{ recipe.title }}</p>
+   
 
-      </div>
-      
+     <!-- Busca Personalizada -->
+     <div class="search-container">
+      <ion-item>
+        <ion-input placeholder="Digite o nome da receita, ingrediente ou categoria" [(ngModel)]="searchQuery" clearInput></ion-input>
+      </ion-item>
+      <ion-button expand="full" color="primary" (click)="searchRecipes()">Buscar</ion-button>
     </div>
 
+    <!-- Filtros de Categorias -->
+    <div class="categories-container">
+      <h3>Categorias</h3>
+      <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterByCategory()">
+        <ion-segment-button value="cafe-da-manha">Café da Manhã</ion-segment-button>
+        <ion-segment-button value="almoco">Almoço</ion-segment-button>
+        <ion-segment-button value="sobremesas">Sobremesas</ion-segment-button>
+        <ion-segment-button value="lanche">Lanches</ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!-- Lista de alimentos adicionados -->
     <div class="add-food-container">
-      <ion-button expand="full" (click)="addFood">
+      <ion-item>
+        <ion-input placeholder="Digite o alimento" [(ngModel)]="foodInput" clearInput debounce="300" autocapitalize="off"></ion-input>
+      </ion-item>
+      <ion-button expand="full" (click)="addFood(foodInput)">
         <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-        Adicione alimento
-      </ion-button>
-      <ion-button expand="full" (click)="addFood">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-        Adicione alimento
-      </ion-button>
-      <ion-button expand="full" (click)="addFood">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-        Adicione alimento
+        Adicionar alimento
       </ion-button>
     </div>
 
+    <ion-list>
+      <ion-item *ngFor="let food of foods">
+        <ion-label>{{ food }}</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- Botão de busca de receitas -->
+    <ion-button expand="full" color="primary" (click)="getRecipes()">Buscar Receitas</ion-button>
+
+    <!-- Exibição de receitas baseadas nos alimentos adicionados -->
     <div *ngIf="isFoodOptionsVisible">
-      <h3>Opções de Alimentos</h3>
+      <h3>Opções de Receitas</h3>
       <ion-list>
         <ion-item *ngFor="let recipe of recipeData">
-          <ion-thumbnail slot="start">
-            <ion-img [src]="recipe.image"></ion-img>
-          </ion-thumbnail>
-          <ion-label>
-            <h2>{{ recipe.title }}</h2>
-          </ion-label>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{ recipe.title }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-img [src]="recipe.image" alt="{{ recipe.title }}"></ion-img>
+              <p *ngIf="recipe.instructions">{{ recipe.instructions | slice:0:100 }}...</p> <!-- Exibe o começo do modo de preparo -->
+              
+              <ion-button expand="block" fill="clear" (click)="togglePreparation(recipe)">
+                {{ recipe.showInstructions ? 'Ver Menos' : 'Ver Mais' }}
+              </ion-button>
+
+              <div *ngIf="recipe.showInstructions">
+                <p>{{ recipe.instructions }}</p> <!-- Exibe o modo de preparo completo -->
+              </div>
+
+              <!-- Botão de Favoritar -->
+              <ion-button fill="outline" (click)="toggleFavorite(recipe)">
+                <ion-icon [name]="recipe.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+                {{ recipe.isFavorite ? 'Favoritado' : 'Favoritar' }}
+              </ion-button>
+
+              <!-- Botão para Lista de Compras -->
+              <ion-button fill="solid" (click)="addToShoppingList(recipe)">
+                <ion-icon slot="start" name="cart-outline"></ion-icon>
+                Adicionar à Lista de Compras
+              </ion-button>
+
+              <!-- Botão de Compartilhar Receita -->
+              <ion-button fill="clear" (click)="shareRecipe(recipe)">
+                <ion-icon slot="start" name="share-social-outline"></ion-icon>
+                Compartilhar
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
         </ion-item>
       </ion-list>
     </div>
-
-    <ion-button expand="full" color="primary" (click)="getRecipes()">Buscar</ion-button>
+   
   </div>
-
-  
 </ion-content>

@@ -15,25 +15,17 @@ export class SpoonacularService {
 
   constructor(private http: HttpClient) {}
 
-  // Função para buscar receitas aleatórias da API
+  // Função para buscar receitas aleatórias
   getRandomRecipes(): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    // Fazendo a chamada à API com a sua chave
-    return this.http.get(`${this.apiUrl}/random?number=5&apiKey=${this.apiKey}`, { headers });
+    const url = `https://api.spoonacular.com/recipes/random?number=10&apiKey=${this.apiKey}`;
+    return this.http.get<any>(url);
   }
 
-  // Função para buscar uma receita por ID
-  getRecipeById(recipeId: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.get(`${this.apiUrl}/${recipeId}/information?apiKey=${this.apiKey}`, { headers });
+  // Função para buscar receitas baseadas em alimentos
+  getRecipesBasedOnFoods(foods: string[]): Observable<any> {
+    const ingredients = foods.join(','); // Junta os alimentos com vírgula
+    const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=${this.apiKey}`;
+    return this.http.get<any>(url);
   }
 }
-
-
  
