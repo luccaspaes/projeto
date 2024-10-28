@@ -39,6 +39,13 @@ export class SpoonacularService {
       return this.http.get(`${this.apiUrl}users/${userId}/weeklyHistory?apiKey=${this.apiKey}`);
     }
 
+    getRecipesByCategory(category: string): Observable<any> {
+      const url = `https://api.spoonacular.com/recipes/complexSearch?query=${category}&apiKey=95206646e8b2486eb8f9ddc3199b66d2`;
+      console.log('URL da requisição:', url);
+    
+      return this.http.get(url);
+    }
+
 
 
 }

@@ -24,11 +24,11 @@
     <!-- Filtros de Categorias -->
     <div class="categories-container">
       <h3>Categorias</h3>
-      <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterByCategory()">
+      <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterByCategory($event.detail.value || '')">
         <ion-segment-button value="cafe-da-manha">Café da Manhã</ion-segment-button>
         <ion-segment-button value="almoco">Almoço</ion-segment-button>
         <ion-segment-button value="sobremesas">Sobremesas</ion-segment-button>
-        <ion-segment-button value="lanche">Lanches</ion-segment-button>
+        <ion-segment-button value="Janta">Janta</ion-segment-button>
       </ion-segment>
     </div>
 
@@ -63,16 +63,19 @@
             </ion-card-header>
             <ion-card-content>
               <ion-img [src]="recipe.image" alt="{{ recipe.title }}"></ion-img>
-              <p *ngIf="recipe.instructions">{{ recipe.instructions | slice:0:100 }}...</p> <!-- Exibe o começo do modo de preparo -->
-              
-              <ion-button expand="block" fill="clear" (click)="togglePreparation(recipe)">
-                {{ recipe.showInstructions ? 'Ver Menos' : 'Ver Mais' }}
-              </ion-button>
-
-              <div *ngIf="recipe.showInstructions">
-                <p>{{ recipe.instructions }}</p> <!-- Exibe o modo de preparo completo -->
+              <div *ngIf="recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0">
+                <p *ngIf="!recipe.showInstructions">{{ recipe.analyzedInstructions[0].steps[0]?.step }}...</p>
+                
+                <ion-button expand="block" fill="clear" (click)="togglePreparation(recipe)">
+                  {{ recipe.showInstructions ? 'Ver Menos' : 'Ver Mais' }}
+                </ion-button>
+      
+                <ol *ngIf="recipe.showInstructions">
+                  <li *ngFor="let step of recipe.analyzedInstructions[0].steps">
+                    {{ step.step }}
+                  </li>
+                </ol>
               </div>
-
               <!-- Botão de Favoritar -->
               <ion-button fill="outline" (click)="toggleFavorite(recipe)">
                 <ion-icon [name]="recipe.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>

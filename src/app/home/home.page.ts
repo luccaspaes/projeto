@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { SpoonacularService } from '../services/spoonacular.service'; // Importa o serviço
 interface Recipe {
+  id: number
   title: string;
   image: string;
-  instructions: string;
+  instructions?: string;
+  analyzedInstructions?: {
+    name: string;
+    steps: { number: number; step: string }[];
+  }[];
   isFavorite?: boolean; // Propriedade opcional
   showInstructions?: boolean; // Propriedade opcional
+ 
+  
+
 }
 
 @Component({
@@ -20,11 +28,20 @@ export class HomePage implements OnInit {
   isFoodOptionsVisible: boolean = false; // Para controlar a exibição de receitas
   foodInput: string = ''; // Valor do input de alimento
   foods: string[] = []; // Lista de alimentos adicionados
-  selectedCategory: string = '';
+  selectedCategory: string  = 'breakfast';
+  categories = [
+    { value: 'breakfast', label: 'Café da Manhã' },
+    { value: 'lunch', label: 'Almoço' },
+    { value: 'dessert', label: 'Sobremesa' },
+    { value: 'dinner', label: 'Janta' }
+  ];
+  receitas: any[] = []; // Adicione esta linha
 
   
 
-  constructor(private spoonacularService: SpoonacularService) {}
+  constructor(private spoonacularService: SpoonacularService) {
+    this.selectedCategory = 'breakfast'; // Categoria padrão
+  }
 
   ngOnInit() {
     this.getRandomRecipes();
@@ -54,7 +71,13 @@ export class HomePage implements OnInit {
       // Chama o serviço para buscar receitas baseadas nos alimentos adicionados
       this.spoonacularService.getRecipesBasedOnFoods(this.foods).subscribe(
         (response) => {
-          this.recipeData = response; // Armazena as receitas retornadas
+          // Mapeia as receitas retornadas para adicionar um fallback para analyzedInstructions e showInstructions
+          this.recipeData = response.map((recipe: any) => ({
+            ...recipe,
+            analyzedInstructions: recipe.analyzedInstructions || [], // Garante que analyzedInstructions seja um array vazio caso esteja undefined ou null
+            showInstructions: false, // Inicializa showInstructions como false para cada receita
+          }));
+  
           console.log('Receitas encontradas:', this.recipeData);
           this.isFoodOptionsVisible = true;
         },
@@ -83,14 +106,40 @@ searchRecipes() {
   }
 }
 
-filterByCategory() {
-  // lógica para filtrar receitas baseadas em selectedCategory
-  if (this.selectedCategory) {
-    // Lógica para filtrar receitas baseadas em selectedCategory
-    console.log('Categoria selecionada:', this.selectedCategory);
-    // Adicione o código para enviar a categoria selecionada ao serviço
+filterByCategory(categoria: any) {
+  const selectedValue = categoria !== undefined ? String(categoria) : ''; // Força para string
+
+  // Se não houver categoria, busque todas as receitas
+  if (!selectedValue) {
+    this.getRecipes(); 
+    return;
   }
+
+  this.selectedCategory = selectedValue; // Atualiza a categoria selecionada
+
+   // Teste com diferentes valores de query
+   const testCategories = ['breakfast', 'lunch', 'dessert', 'dinner']; // Categorias para testar
+   const categoryToTest = testCategories[Math.floor(Math.random() * testCategories.length)];
+
+  // Chame o serviço para buscar receitas pela categoria selecionada
+  this.spoonacularService.getRecipesByCategory(this.selectedCategory).subscribe(
+    (response: any) => {
+      console.log('Resposta da API:', response); // Verifique a resposta
+      this.receitas = response.results || []; // Atribua as receitas, se existirem
+      console.log('Receitas filtradas:', this.receitas);
+    },
+    (error) => {
+      console.error('Erro ao buscar receitas por categoria:', error);
+    }
+  );
 }
+
+
+
+
+
+
+
 
 addFood(food: string) {
   if (food) {
@@ -112,6 +161,7 @@ shareRecipe(recipe: Recipe) {
   // lógica para compartilhar receita
   console.log('Compartilhando receita:', recipe.title);
 }
+
 
 
 
