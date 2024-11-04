@@ -45,6 +45,14 @@ ion-card {
   margin-bottom: 16px;
 }
 
+.no-recipes-message {
+  padding: 20px;
+  margin: 20px;
+  background-color: #f8f8f8; /* Fundo claro para a mensagem */
+  border-radius: 10px; /* Cantos arredondados */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
 
 
 @media (min-width: 768px) {

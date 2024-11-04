@@ -36,7 +36,9 @@ export class HomePage implements OnInit {
     { value: 'dessert', label: 'Sobremesa' },
     { value: 'dinner', label: 'Janta' }
   ];
+  stepsToShow: number = 3; // número de passos a serem exibidos inicialmente
   receitas: any[] = []; // Adicione esta linha
+
 
   
 
@@ -69,31 +71,41 @@ export class HomePage implements OnInit {
     this.foods.splice(index, 1);
   }
 
+    // Função para mostrar mais passos
+    showMoreSteps(recipe: Recipe) {
+      this.stepsToShow += 3; // aumenta a quantidade de passos mostrados
+    }
+
+  
+
 
   // Função para buscar receitas baseadas nos alimentos
-  getRecipes() {
-    if (this.foods.length > 0) {
-      // Chama o serviço para buscar receitas baseadas nos alimentos adicionados
-      this.spoonacularService.getRecipesBasedOnFoods(this.foods).subscribe(
-        (response) => {
-          // Mapeia as receitas retornadas para adicionar um fallback para analyzedInstructions e showInstructions
-          this.recipeData = response.map((recipe: any) => ({
-            ...recipe,
-            analyzedInstructions: recipe.analyzedInstructions || [{ steps: [] }], // Garante que analyzedInstructions seja um array vazio caso esteja undefined ou null
-            showInstructions: false, // Inicializa showInstructions como false para cada receita
-          }));
-  
-          console.log('Dados das receitas recebidas:', this.recipeData);
-          this.isFoodOptionsVisible = true;
-        },
-        (error) => {
-          console.error('Erro ao buscar receitas:', error);
-        }
-      );
-    } else {
-      console.log('Nenhum alimento adicionado.');
-    }
+getRecipes() {
+  if (this.foods.length > 0) {
+    // Chama o serviço para buscar receitas baseadas nos alimentos adicionados
+    this.spoonacularService.getRecipesBasedOnFoods(this.foods).subscribe(
+      (response) => {
+        // Mapeia as receitas retornadas para adicionar um fallback para analyzedInstructions e showInstructions
+        this.recipeData = response.map((recipe: any) => ({
+          ...recipe,
+          analyzedInstructions: recipe.analyzedInstructions || [], // Garante que analyzedInstructions seja um array vazio caso esteja undefined ou null
+          showInstructions: false, // Inicializa showInstructions como false para cada receita
+        }));
+
+        // Aqui não precisamos mais verificar se analyzedInstructions está definido,
+        // pois já garantimos que sempre será um array.
+        
+        console.log('Dados das receitas recebidas:', this.recipeData);
+        this.isFoodOptionsVisible = this.recipeData.length > 0; // Atualiza a visibilidade das opções de receitas
+      },
+      (error) => {
+        console.error('Erro ao buscar receitas:', error);
+      }
+    );
+  } else {
+    console.log('Nenhum alimento adicionado.');
   }
+}
 
   
  // Função para alternar a exibição do modo de preparo
@@ -161,9 +173,11 @@ addFood(food: string) {
     this.foodInput = ''; // Limpa o campo de entrada após adicionar
   }
 }
+
 hasInstructions(recipe: any): boolean {
-  return recipe?.analyzedInstructions?.length > 0 && recipe.analyzedInstructions[0]?.steps?.length > 0;
+  return recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0;
 }
+
 
 getFirstStep(recipe: any): string {
   return this.hasInstructions(recipe) ? recipe.analyzedInstructions[0].steps[0].step : 'Nenhuma instrução disponível.';

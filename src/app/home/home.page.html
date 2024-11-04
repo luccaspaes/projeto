@@ -11,10 +11,8 @@
   <div class="container">
     <h2>Receitas</h2>
 
-   
-
-     <!-- Busca Personalizada -->
-     <div class="search-container">
+    <!-- Busca Personalizada -->
+    <div class="search-container">
       <ion-item>
         <ion-input placeholder="Digite o nome da receita, ingrediente ou categoria" [(ngModel)]="searchQuery" clearInput></ion-input>
       </ion-item>
@@ -81,12 +79,16 @@
               <ion-button expand="block" fill="clear" (click)="togglePreparation(recipe)">
                 {{ recipe.showInstructions ? 'Ver Menos' : 'Ver Mais' }}
               </ion-button>
-            
-             
+              
+              <ng-container *ngIf="recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0">
+                <ol *ngIf="recipe.showInstructions">
+                  <li *ngFor="let step of recipe.analyzedInstructions[0]?.steps">
+                    {{ step.step }}
+                  </li>
+                </ol>
+              </ng-container>
             </div>
-  
-            
-  
+
             <!-- Botões para Favoritar e Adicionar à Lista de Compras -->
             <ion-button fill="outline" (click)="toggleFavorite(recipe)">
               <ion-icon [name]="recipe.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
@@ -106,4 +108,19 @@
     </ion-list>
   </div>
   </div>
+
+  <ng-container *ngIf="recipeData.length === 0 && isFoodOptionsVisible">
+    <div class="no-recipes-message">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title class="ion-text-center">
+            <h2 style="color: #007BFF;">Nenhuma Receita Encontrada</h2>
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="ion-text-center">
+          <p style="font-size: 1.2em; color: #666;">Tente adicionar alguns alimentos e busque receitas novamente.</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-container>
 </ion-content>
