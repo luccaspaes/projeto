@@ -47,6 +47,12 @@ export class SpoonacularService {
     }
 
 
+    // Função para buscar receitas personalizadas com base em uma consulta
+  searchRecipes(query: string): Observable<any> {
+    const url = `${this.apiUrl}/complexSearch?query=${query}&apiKey=${this.apiKey}`;
+    return this.http.get<any>(url);
+  }
+
 
 }
  

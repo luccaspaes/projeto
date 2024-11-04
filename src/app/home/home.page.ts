@@ -24,6 +24,7 @@ interface Recipe {
 export class HomePage implements OnInit {
 
   searchQuery: string = ''; // Variável para armazenar a consulta de pesquisa
+  searchResults: any[] = []; // Armazena os resultados
   recipeData: Recipe[] = [];
   isFoodOptionsVisible: boolean = false; // Para controlar a exibição de receitas
   foodInput: string = ''; // Valor do input de alimento
@@ -64,6 +65,10 @@ export class HomePage implements OnInit {
     );
   }
 
+  removeFood(index: number) {
+    this.foods.splice(index, 1);
+  }
+
 
   // Função para buscar receitas baseadas nos alimentos
   getRecipes() {
@@ -74,11 +79,11 @@ export class HomePage implements OnInit {
           // Mapeia as receitas retornadas para adicionar um fallback para analyzedInstructions e showInstructions
           this.recipeData = response.map((recipe: any) => ({
             ...recipe,
-            analyzedInstructions: recipe.analyzedInstructions || [], // Garante que analyzedInstructions seja um array vazio caso esteja undefined ou null
+            analyzedInstructions: recipe.analyzedInstructions || [{ steps: [] }], // Garante que analyzedInstructions seja um array vazio caso esteja undefined ou null
             showInstructions: false, // Inicializa showInstructions como false para cada receita
           }));
   
-          console.log('Receitas encontradas:', this.recipeData);
+          console.log('Dados das receitas recebidas:', this.recipeData);
           this.isFoodOptionsVisible = true;
         },
         (error) => {
@@ -96,15 +101,7 @@ export class HomePage implements OnInit {
   recipe.showInstructions = !recipe.showInstructions; // Alterna entre mostrar ou esconder
 }
 
-// Função de busca de receitas
-searchRecipes() {
-  // lógica para buscar receitas baseadas no searchQuery
-  if (this.searchQuery) {
-    // Lógica para buscar receitas baseadas na consulta de pesquisa
-    console.log('Busca personalizada para:', this.searchQuery);
-    // Adicione o código para enviar a consulta de pesquisa ao serviço
-  }
-}
+
 
 filterByCategory(categoria: any) {
   const selectedValue = categoria !== undefined ? String(categoria) : ''; // Força para string
@@ -134,6 +131,23 @@ filterByCategory(categoria: any) {
   );
 }
 
+searchRecipes() {
+  if (this.searchQuery) {
+    this.spoonacularService.searchRecipes(this.searchQuery).subscribe(
+      (data) => {
+        this.recipeData = data.results.map((recipe: any) => ({
+          ...recipe,
+          showInstructions: false, // Para controlar a exibição do modo de preparo
+          isFavorite: false        // Para controle de favoritos
+        }));
+        this.isFoodOptionsVisible = true; // Para garantir a exibição da seção de opções
+      },
+      (error) => {
+        console.error('Erro ao buscar receitas:', error);
+      }
+    );
+  }
+}
 
 
 
@@ -144,9 +158,23 @@ filterByCategory(categoria: any) {
 addFood(food: string) {
   if (food) {
     this.foods.push(food);
+    this.foodInput = ''; // Limpa o campo de entrada após adicionar
   }
 }
+hasInstructions(recipe: any): boolean {
+  return recipe?.analyzedInstructions?.length > 0 && recipe.analyzedInstructions[0]?.steps?.length > 0;
+}
 
+getFirstStep(recipe: any): string {
+  return this.hasInstructions(recipe) ? recipe.analyzedInstructions[0].steps[0].step : 'Nenhuma instrução disponível.';
+}
+
+formatRecipesData(recipes: any[]) {
+  recipes.forEach(recipe => {
+    recipe.hasInstructions = recipe.analyzedInstructions?.length > 0 && recipe.analyzedInstructions[0].steps?.length > 0;
+  });
+  this.searchResults = recipes;
+}
 
 toggleFavorite(recipe: Recipe) {
   recipe.isFavorite = !recipe.isFavorite;
@@ -161,6 +189,7 @@ shareRecipe(recipe: Recipe) {
   // lógica para compartilhar receita
   console.log('Compartilhando receita:', recipe.title);
 }
+
 
 
 
