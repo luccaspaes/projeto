@@ -53,6 +53,14 @@ export class SpoonacularService {
     return this.http.get<any>(url);
   }
 
+   // Método para buscar alimentos
+   buscarAlimentos(): Observable<any> {
+    // A URL pode ser ajustada conforme a sua necessidade e autenticação
+    return this.http.get<any>(`${this.apiUrl}/search?query=apple&apiKey=YOUR_API_KEY`);
+  }
+
+
+
 
 }
  

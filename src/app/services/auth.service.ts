@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';  // Import para autenticação
 import firebase from 'firebase/compat/app';  // Importa o Firebase
-import { from } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { from, Observable } from 'rxjs';
 
 
 @Injectable({
@@ -9,17 +10,22 @@ import { from } from 'rxjs';
 })
 export class AuthService {
 
-  constructor(private afAuth: AngularFireAuth) { }
+  constructor(private afAuth: AngularFireAuth,  private firestore: AngularFirestore) { }
 
-    // Método de login com email e senha
-  async login(email: string, password: string) {
-    try {
-      const user = await this.afAuth.signInWithEmailAndPassword(email, password);
-      return user;
-    } catch (error) {
-      throw error;
+  // auth.service.ts
+async login(email: string, password: string): Promise<string> {
+  try {
+    const user = await this.afAuth.signInWithEmailAndPassword(email, password);
+    if (user && user.user) {
+      return user.user.uid;  // Retorna o userId do Firebase
+    } else {
+      throw new Error('Usuário não encontrado');
     }
+  } catch (error) {
+    console.error('Erro no login:', error);
+    throw error;  // Lança o erro para que a função que chamou este método saiba do erro
   }
+}
 
   // Método de logout
   async logout() {
@@ -41,4 +47,16 @@ export class AuthService {
       }
     });
   }
+
+    // Recupera os dados nutricionais de um usuário
+    getDataNutricional(userId: string): Observable<any> {
+      return this.firestore.collection('users').doc(userId).valueChanges(); // Recupera os dados de um documento específico do usuário
+    }
+
+
+  // Atualiza ou adiciona os dados nutricionais de um usuário
+  updateDataNutricional(userId: string, data: any): Promise<void> {
+    return this.firestore.collection('users').doc(userId).set(data, { merge: true }); // Usa merge para não sobrescrever os dados existentes
+  }
+
 }

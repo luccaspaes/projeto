@@ -54,6 +54,10 @@ const routes: Routes = [
     path: 'email',
     loadChildren: () => import('./email/email.module').then( m => m.EmailPageModule)
   },
+  {
+    path: 'alimento',
+    loadChildren: () => import('./alimento/alimento.module').then( m => m.AlimentoPageModule)
+  },
 
 
 

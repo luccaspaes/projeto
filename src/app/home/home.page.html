@@ -76,17 +76,22 @@
             <div *ngIf="hasInstructions(recipe)">
               <p *ngIf="!recipe.showInstructions">{{ getFirstStep(recipe) }}...</p>
               
+              
               <ion-button expand="block" fill="clear" (click)="togglePreparation(recipe)">
                 {{ recipe.showInstructions ? 'Ver Menos' : 'Ver Mais' }}
               </ion-button>
               
-              <ng-container *ngIf="recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0">
+              <div *ngIf="recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0">
                 <ol *ngIf="recipe.showInstructions">
                   <li *ngFor="let step of recipe.analyzedInstructions[0]?.steps">
                     {{ step.step }}
                   </li>
                 </ol>
-              </ng-container>
+              </div>
+              <ng-template #noInstructions>
+                <p>Instruções não disponíveis para esta receita.</p>
+              </ng-template>
+              
             </div>
 
             <!-- Botões para Favoritar e Adicionar à Lista de Compras -->

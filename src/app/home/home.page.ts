@@ -79,22 +79,24 @@ export class HomePage implements OnInit {
   
 
 
-  // Função para buscar receitas baseadas nos alimentos
+ // Função para buscar receitas baseadas nos alimentos
 getRecipes() {
   if (this.foods.length > 0) {
-    // Chama o serviço para buscar receitas baseadas nos alimentos adicionados
     this.spoonacularService.getRecipesBasedOnFoods(this.foods).subscribe(
       (response) => {
-        // Mapeia as receitas retornadas para adicionar um fallback para analyzedInstructions e showInstructions
+        console.log('Resposta da API:', response); // Inspecione a resposta completa
         this.recipeData = response.map((recipe: any) => ({
           ...recipe,
-          analyzedInstructions: recipe.analyzedInstructions || [], // Garante que analyzedInstructions seja um array vazio caso esteja undefined ou null
+          analyzedInstructions: Array.isArray(recipe.analyzedInstructions) 
+            ? recipe.analyzedInstructions.map((instruction: any) => ({
+                ...instruction,
+                steps: Array.isArray(instruction.steps) ? instruction.steps : [] // Garante que steps seja um array
+              }))
+            : [], // Garante que analyzedInstructions seja um array, mesmo se vazio
           showInstructions: false, // Inicializa showInstructions como false para cada receita
         }));
+        console.log('Estrutura de recipeData:', JSON.stringify(this.recipeData, null, 2));
 
-        // Aqui não precisamos mais verificar se analyzedInstructions está definido,
-        // pois já garantimos que sempre será um array.
-        
         console.log('Dados das receitas recebidas:', this.recipeData);
         this.isFoodOptionsVisible = this.recipeData.length > 0; // Atualiza a visibilidade das opções de receitas
       },
@@ -106,6 +108,7 @@ getRecipes() {
     console.log('Nenhum alimento adicionado.');
   }
 }
+
 
   
  // Função para alternar a exibição do modo de preparo
@@ -175,8 +178,12 @@ addFood(food: string) {
 }
 
 hasInstructions(recipe: any): boolean {
-  return recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0;
+  const hasInstructions = recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0;
+  console.log(`Recipe ID ${recipe.id} - Has instructions:`, hasInstructions);
+  return hasInstructions;
 }
+
+
 
 
 getFirstStep(recipe: any): string {
