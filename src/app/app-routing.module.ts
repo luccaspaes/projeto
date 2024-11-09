@@ -58,6 +58,10 @@ const routes: Routes = [
     path: 'alimento',
     loadChildren: () => import('./alimento/alimento.module').then( m => m.AlimentoPageModule)
   },
+  {
+    path: 'resetpassword',
+    loadChildren: () => import('./resetpassword/resetpassword.module').then( m => m.ResetpasswordPageModule)
+  },
 
 
 
