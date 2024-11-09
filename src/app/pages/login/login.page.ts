@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { AuthService } from '../../services/auth.service';  // Importe o serviço de autenticação
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -16,6 +16,7 @@ import 'firebase/compat/firestore';
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
   rememberMe: boolean = false;
+  isNavigating = false;  // Variável para bloquear navegações simultâneas
 
   constructor(
     private router: Router, 
@@ -23,14 +24,23 @@ export class LoginPage implements OnInit {
     private authService: AuthService, 
     private alertController: AlertController,
     private afAuth: AngularFireAuth  // Para capturar o redirecionamento
-  ) {}
+  ) {
+    // Ouvir eventos de navegação
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.isNavigating = true;  // Marca que a navegação está ocorrendo
+      }
+    });
+  }
 
   ngOnInit() {
     // Ouvir o resultado do redirecionamento, se houver
     this.afAuth.getRedirectResult().then((result) => {
       if (result.user) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/home'], { replaceUrl: true });  // Redireciona e substitui a URL
       }
+    }).catch((error) => {
+      console.error('Erro ao recuperar o redirecionamento:', error);
     });
 
     // Cria o formulário com as validações
@@ -42,17 +52,20 @@ export class LoginPage implements OnInit {
 
   // Função para autenticar o usuário
   async autenticar() {
-    if (this.loginForm.valid) {
+    if (this.loginForm.valid && !this.isNavigating) {
       try {
+        this.isNavigating = true;  // Bloqueia navegações simultâneas
         const { email, password } = this.loginForm.value;
         await this.authService.login(email, password);  // Chama o método de login do seu AuthService
         if (this.rememberMe) {
           // Armazene a sessão, se necessário (exemplo com LocalStorage ou Firebase)
         }
-        this.router.navigate(['/home']);  // Redireciona para a página inicial
+        this.router.navigate(['/home'], { replaceUrl: true });  // Redireciona para a página inicial
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
         this.presentAlert('Erro de autenticação', errorMessage);
+      } finally {
+        this.isNavigating = false;  // Libera navegação após o processo de login
       }
     } else {
       this.presentAlert('Erro', 'Por favor, preencha todos os campos corretamente.');
@@ -61,7 +74,9 @@ export class LoginPage implements OnInit {
 
   // Função para navegar para a página de reset de senha
   navigateToResetPassword() {
-    this.router.navigate(['/resetpassword']);
+    if (!this.isNavigating) {
+      this.router.navigate(['/resetpassword']);
+    }
   }
 
   // Função de alerta
@@ -82,21 +97,19 @@ export class LoginPage implements OnInit {
       this.presentAlert('Erro no login com Facebook', errorMessage);
     }
   }
+
   async loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
+      this.isNavigating = true;  // Bloqueia navegações simultâneas
       const result = await this.afAuth.signInWithPopup(provider);
       if (result.user) {
         console.log('Usuário logado com sucesso:', result.user);
-        // Usar a verificação assíncrona para garantir que o usuário está autenticado
-        const currentUser = await this.afAuth.currentUser;  // Espera o usuário ser resolvido
-  
-        if (currentUser) {
-          console.log('Redirecionando para a página Home');
-          this.router.navigate(['/home'], { replaceUrl: true });
-        } else {
-          console.log('Usuário não autenticado');
-        }
+        // Verificar se o usuário foi autenticado
+        await this.afAuth.currentUser;  // Espera o usuário ser resolvido
+
+        console.log('Redirecionando para a página Home');
+        this.router.navigate(['/home'], { replaceUrl: true });  // Use o replaceUrl para evitar manter o login na navegação
       } else {
         console.log('Nenhum usuário encontrado após o login');
       }
@@ -104,8 +117,11 @@ export class LoginPage implements OnInit {
       const errorMessage = (error as Error).message || 'Erro desconhecido';
       console.error('Erro no login com Google', errorMessage);
       this.presentAlert('Erro no login com Google', errorMessage);
+    } finally {
+      this.isNavigating = false;  // Libera navegação após o processo de login
     }
   }
+
   async loginWithTwitter() {
     try {
       await this.authService.loginWithTwitter();
