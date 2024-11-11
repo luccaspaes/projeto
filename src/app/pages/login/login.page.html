@@ -35,7 +35,10 @@
       </ion-button>
 
       <!-- Link para registro -->
-      <ion-checkbox [(ngModel)]="rememberMe"></ion-checkbox> Mantenha-me conectado
+      <ion-item>
+        <ion-checkbox [(ngModel)]="rememberMe" [ngModelOptions]="{standalone: true}"></ion-checkbox> 
+        Mantenha-me conectado
+      </ion-item>
       <p class="register-text">Não tem uma conta? <ion-router-link routerLink="/registro" routerLinkActive="active">Registre-se agora</ion-router-link></p>
       <p class="forgot-password-text">
         <button (click)="navigateToResetPassword()">Esqueci minha senha</button>
@@ -43,9 +46,7 @@
 
       <!-- Botões de Login Social -->
       <div class="social-login">
-        <ion-button expand="block" (click)="loginWithFacebook()">Entrar com Facebook</ion-button>
         <ion-button expand="block" color="danger" (click)="loginWithGoogle()">Entrar com Google+</ion-button>
-        <ion-button expand="block" (click)="loginWithTwitter()">Entrar com Twitter</ion-button>
       </div>
     </form>
   </div>

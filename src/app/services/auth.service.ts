@@ -74,56 +74,19 @@ export class AuthService {
     return this.afAuth.sendPasswordResetEmail(email);
   }
 
-  // Método de login com Google
   async loginWithGoogle(): Promise<void> {
-    const provider = new firebase.auth.GoogleAuthProvider();
     try {
-      await this.afAuth.signInWithPopup(provider);
+      // Realiza o login com o Google
+      await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+
+      // Realiza a navegação apenas uma vez após o login
       this.router.navigate(['/home']);
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Erro ao fazer login com Google:', error.message);
-        throw new Error(error.message);
-      } else {
-        console.error('Erro desconhecido ao fazer login com Google');
-        throw new Error("Ocorreu um erro desconhecido ao tentar fazer login com Google.");
-      }
+      console.error('Erro ao fazer login com Google', error);
     }
   }
 
-  // Método de login com Facebook
-  async loginWithFacebook(): Promise<void> {
-    const provider = new firebase.auth.FacebookAuthProvider();
-    try {
-      await this.afAuth.signInWithPopup(provider);
-      this.router.navigate(['/home']);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Erro ao fazer login com Facebook:', error.message);
-        throw new Error(error.message);
-      } else {
-        console.error('Erro desconhecido ao fazer login com Facebook');
-        throw new Error("Ocorreu um erro desconhecido ao tentar fazer login com Facebook.");
-      }
-    }
-  }
-
-  // Método de login com Twitter
-  async loginWithTwitter(): Promise<void> {
-    const provider = new firebase.auth.TwitterAuthProvider();
-    try {
-      await this.afAuth.signInWithPopup(provider);
-      this.router.navigate(['/home']);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Erro ao fazer login com Twitter:', error.message);
-        throw new Error(error.message);
-      } else {
-        console.error('Erro desconhecido ao fazer login com Twitter');
-        throw new Error("Ocorreu um erro desconhecido ao tentar fazer login com Twitter.");
-      }
-    }
-  }
+  
 
   // Verifica se o usuário está autenticado
   get user() {

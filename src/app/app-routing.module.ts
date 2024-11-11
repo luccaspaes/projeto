@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+// Importe o AuthGuard
+  
 
 const routes: Routes = [
   {
@@ -10,6 +12,8 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+    
+ 
   },
   {
     path: 'login',
@@ -42,7 +46,8 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
-  },  {
+  },
+  {
     path: 'senha',
     loadChildren: () => import('./senha/senha.module').then( m => m.SenhaPageModule)
   },
@@ -72,6 +77,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    
   ],
   exports: [RouterModule]
 })
