@@ -1,7 +1,9 @@
+
 import { Component, OnInit } from '@angular/core';
 import { SpoonacularService } from '../services/spoonacular.service'; // Importa o serviço de receitas
 import { TranslateService } from '../services/translate.service'; // Importa o serviço de tradução
 import { Recipe } from '../model/recipe.interface'; // Importa a interface Recipe
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @Component({
   selector: 'app-home',
@@ -45,29 +47,34 @@ export class HomePage implements OnInit {
     this.getRandomRecipes(); // Carrega as receitas aleatórias
   }
   
+  async getRandomRecipes() {
+    this.spoonacularService.getRandomRecipes().subscribe(
+      (response) => {
+        this.recipeData = response.recipes;
   
- // Exemplo de uso do método bulkTranslate
-async getRandomRecipes() {
-  this.spoonacularService.getRandomRecipes().subscribe(
-    async (response) => {
-      this.recipeData = response.recipes;
-
-     
-
-      // Atualizando os títulos das receitas com as traduções
-      this.recipeData.forEach((recipe, index) => {
-       
-      });
-
-      console.log('Receitas aleatórias:', this.recipeData);
-      this.isFoodOptionsVisible = true;
-    },
-    (error) => {
-      console.error('Erro ao buscar receitas aleatórias:', error);
-    }
-  );
-}
-
+        // Traduzir os títulos das receitas
+        this.recipeData.forEach((recipe) => {
+          this.translateService.translateText(recipe.title, 'pt').subscribe(
+            (translatedTitle: any) => {
+              console.log('Traduzido:', translatedTitle); // Verifique a estrutura da resposta
+              // A tradução está dentro de `data.translations[0].translatedText`
+              recipe.translatedTitle = translatedTitle.data.translations[0].translatedText || recipe.title;
+            },
+            (error) => {
+              console.error('Erro ao traduzir título da receita:', error);
+              recipe.translatedTitle = recipe.title; // Fallback para o título original
+            }
+          );
+        });
+  
+        console.log('Receitas aleatórias:', this.recipeData);
+        this.isFoodOptionsVisible = true;
+      },
+      (error) => {
+        console.error('Erro ao buscar receitas aleatórias:', error);
+      }
+    );
+  }
 
 // Função para obter o primeiro passo da receita
 getFirstStep(recipe: any): string {
@@ -200,9 +207,4 @@ getFirstStep(recipe: any): string {
       console.error('Erro ao testar tradução:', error);
     }
   }
-
-
-
-
-
 }

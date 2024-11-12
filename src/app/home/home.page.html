@@ -20,7 +20,7 @@
       <ion-button expand="full" color="primary" (click)="searchRecipes()">Buscar</ion-button>
       <ion-list *ngIf="searchResults.length > 0">
         <ion-item *ngFor="let recipe of searchResults">
-          <ion-label>{{ recipe.title }}</ion-label>
+          <ion-label>{{ recipe.translatedTitle || recipe.title }}</ion-label>
         </ion-item>
       </ion-list>
     </div>
@@ -70,7 +70,7 @@
       <ion-item *ngFor="let recipe of recipeData">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>{{ recipe.title }}</ion-card-title>
+            <ion-card-title>{{ recipe.translatedTitle || recipe.title }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-img [src]="recipe.image" alt="{{ recipe.title }}"></ion-img>
@@ -131,3 +131,4 @@
     </div>
   </ng-container>
 </ion-content>
+

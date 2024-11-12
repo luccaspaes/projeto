@@ -14,7 +14,9 @@ export interface Step {
     title: string;
     image: string;
     instructions?: string;
-    analyzedInstructions?: Instruction[];
+    analyzedInstructions: Array<any>;
     isFavorite?: boolean;
     showInstructions?: boolean;
+    translatedStep?: string;
+    translatedTitle?: string; 
   }

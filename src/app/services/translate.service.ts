@@ -38,6 +38,11 @@ export class TranslateService {
   }
 
 
+  }
 
 
-}
+
+
+
+
+
