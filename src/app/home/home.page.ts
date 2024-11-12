@@ -41,31 +41,22 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     // Traduzir as categorias ao carregar a página
-    await this.translateCategories();
+    
     this.getRandomRecipes(); // Carrega as receitas aleatórias
   }
   
-  // Função para traduzir as categorias ao carregar a página
-  async translateCategories() {
-    for (let i = 0; i < this.categories.length; i++) {
-      const category = this.categories[i];
-      category.label = await this.translateService.translateWithDelay(category.label, 'pt'); // Traduz para o português
-    }
-  }
-
+  
  // Exemplo de uso do método bulkTranslate
 async getRandomRecipes() {
   this.spoonacularService.getRandomRecipes().subscribe(
     async (response) => {
       this.recipeData = response.recipes;
 
-      // Coletando todos os títulos de receitas para tradução em lote
-      const titles = this.recipeData.map(recipe => recipe.title);
-      const translatedTitles = await this.translateService.bulkTranslate(titles, 'pt');
+     
 
       // Atualizando os títulos das receitas com as traduções
       this.recipeData.forEach((recipe, index) => {
-        recipe.title = translatedTitles[index];
+       
       });
 
       console.log('Receitas aleatórias:', this.recipeData);
@@ -118,19 +109,17 @@ getFirstStep(recipe: any): string {
       console.log('Nenhum alimento adicionado.');
     }
   }
-
-  // Função para alternar a exibição dos passos das receitas
   async togglePreparation(recipe: any) {
     recipe.showInstructions = !recipe.showInstructions;
     if (recipe.showInstructions && recipe.analyzedInstructions.length > 0) {
       for (let instruction of recipe.analyzedInstructions) {
         for (let step of instruction.steps) {
-          step.step = await this.translateService.translateWithDelay(step.step, 'pt'); // Traduz cada passo
+          // A tradução será feita e o resultado será atribuído ao texto do passo
+          step.translatedStep = await this.translateService.translateWithDelay(step.step, 'pt').toPromise();
         }
       }
     }
   }
-
   // Função para filtrar receitas por categoria
   filterByCategory(categoria: any) {
     const selectedValue = categoria !== undefined ? String(categoria) : '';

@@ -86,7 +86,7 @@
               <div *ngIf="recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0">
                 <ol *ngIf="recipe.showInstructions">
                   <li *ngFor="let step of recipe.analyzedInstructions[0]?.steps">
-                    {{ step.step }}
+                    {{ step.translatedStep || step.step }}
                   </li>
                 </ol>
               </div>

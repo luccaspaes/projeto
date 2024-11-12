@@ -1,6 +1,7 @@
 export interface Step {
     number: number;
     step: string;
+    translatedStep?: string; 
   }
   
   export interface Instruction {
