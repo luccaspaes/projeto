@@ -21,12 +21,30 @@ export class SpoonacularService {
     return this.http.get<any>(url);
   }
 
-  // Função para buscar receitas baseadas em alimentos
-  getRecipesBasedOnFoods(foods: string[]): Observable<any> {
-    const ingredients = foods.join(','); // Junta os alimentos com vírgula
-    const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=${this.apiKey}`;
-    return this.http.get<any>(url);
+ // spoonacular.service.ts
+getRecipesBasedOnFoods(foods: string[]): Observable<any> {
+  // Verifica se o array de alimentos não está vazio
+  if (foods.length === 0) {
+    return new Observable((observer) => {
+      observer.next({ results: [] });
+      observer.complete();
+    });
   }
+
+  // Converte o array de alimentos em uma string separada por vírgulas
+  const ingredients = foods.join(',');
+
+  // URL da API com a chave da API e os alimentos na query string
+  const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=${this.apiKey}&ignorePantry=true`;
+
+  // Log para depuração
+  console.log('URL da API:', url);
+
+  // Realiza a requisição à API e retorna um observable com os resultados
+  return this.http.get<any>(url);
+}
+
+
 
     // Exemplo de função para obter dados de nutrição por ingrediente
     getNutritionByIngredient(ingredient: string): Observable<any> {
@@ -45,14 +63,13 @@ export class SpoonacularService {
     
       return this.http.get(url);
     }
-
-
-    // Função para buscar receitas personalizadas com base em uma consulta
-  searchRecipes(query: string): Observable<any> {
-    const url = `${this.apiUrl}/complexSearch?query=${query}&apiKey=${this.apiKey}`;
-    return this.http.get<any>(url);
-  }
-
+// Verifique se a string de ingredientes está sendo corretamente construída
+searchRecipes(ingredients: string): Observable<any> {
+  const encodedIngredients = encodeURIComponent(ingredients); // Codifica para garantir a integridade da URL
+  console.log('Ingredients being sent:', ingredients); // Log para depuração
+  const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodedIngredients}&number=5&apiKey=${this.apiKey}`;
+  return this.http.get<any>(url);
+}
    // Método para buscar alimentos
    buscarAlimentos(): Observable<any> {
     // A URL pode ser ajustada conforme a sua necessidade e autenticação

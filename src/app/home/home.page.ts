@@ -37,6 +37,7 @@ export class HomePage implements OnInit {
   stepsToShow: number = 3; // número de passos a serem exibidos inicialmente
   receitas: any[] = []; // Receitas filtradas
   isLoading: boolean = true;
+  foodName: string = '';
   translatedText: string = '';  // Para armazenar o texto traduzido
 
   constructor(private spoonacularService: SpoonacularService, private translateService: TranslateService) {}
@@ -90,96 +91,119 @@ getFirstStep(recipe: any): string {
   return ''; // Caso não haja instruções ou passos, retorna uma string vazia
 }
 
-  // Função para buscar receitas com base nos alimentos
-  getRecipes() {
-    if (this.foods.length > 0) {
-      this.spoonacularService.getRecipesBasedOnFoods(this.foods).subscribe(
-        (response) => {
-          console.log('Resposta da API:', response);
-          this.recipeData = response.map((recipe: any) => ({
-            ...recipe,
-            analyzedInstructions: Array.isArray(recipe.analyzedInstructions)
-              ? recipe.analyzedInstructions.map((instruction: any) => ({
-                  ...instruction,
-                  steps: Array.isArray(instruction.steps) ? instruction.steps : [] // Garante que steps seja um array
-                }))
-              : [], // Garante que analyzedInstructions seja um array, mesmo se vazio
-            showInstructions: false, // Inicializa showInstructions como false para cada receita
-          }));
-          this.isFoodOptionsVisible = this.recipeData.length > 0; // Atualiza a visibilidade das opções de receitas
-        },
-        (error) => {
-          console.error('Erro ao buscar receitas:', error);
-        }
-      );
-    } else {
-      console.log('Nenhum alimento adicionado.');
-    }
+getRecipes() {
+  if (this.foods.length > 0) {
+    this.spoonacularService.getRecipesBasedOnFoods(this.foods).subscribe(
+      (response) => {
+        console.log('Resposta da API:', response);
+        // Certifique-se de mapear a resposta corretamente, caso a estrutura dos dados mude
+        this.recipeData = response.map((recipe: any) => ({
+          ...recipe,
+          analyzedInstructions: Array.isArray(recipe.analyzedInstructions)
+            ? recipe.analyzedInstructions.map((instruction: any) => ({
+                ...instruction,
+                steps: Array.isArray(instruction.steps) ? instruction.steps : [] // Garante que steps seja um array
+              }))
+            : [], // Garante que analyzedInstructions seja um array, mesmo se vazio
+          showInstructions: false, // Inicializa showInstructions como false para cada receita
+        }));
+        this.isFoodOptionsVisible = this.recipeData.length > 0; // Atualiza a visibilidade das opções de receitas
+      },
+      (error) => {
+        console.error('Erro ao buscar receitas:', error);
+      }
+    );
+  } else {
+    console.log('Nenhum alimento adicionado.');
   }
-  async togglePreparation(recipe: any) {
-    recipe.showInstructions = !recipe.showInstructions;
-    if (recipe.showInstructions && recipe.analyzedInstructions.length > 0) {
-      for (let instruction of recipe.analyzedInstructions) {
-        for (let step of instruction.steps) {
-          // A tradução será feita e o resultado será atribuído ao texto do passo
+}
+
+
+
+async togglePreparation(recipe: any) {
+  recipe.showInstructions = !recipe.showInstructions;
+  if (recipe.showInstructions && recipe.analyzedInstructions.length > 0) {
+    for (let instruction of recipe.analyzedInstructions) {
+      for (let step of instruction.steps) {
+        if (!step.translatedStep) {
           step.translatedStep = await this.translateService.translateWithDelay(step.step, 'pt').toPromise();
         }
       }
     }
   }
-  // Função para filtrar receitas por categoria
+}
   filterByCategory(categoria: any) {
-    const selectedValue = categoria !== undefined ? String(categoria) : '';
-
-    if (!selectedValue) {
-      this.getRecipes();
-      return;
-    }
-
- 
-
-    this.selectedCategory = selectedValue;
+    this.selectedCategory = categoria;
     this.spoonacularService.getRecipesByCategory(this.selectedCategory).subscribe(
       (response: any) => {
-        this.receitas = response.results || []; // Atribui as receitas filtradas
-        console.log('Receitas filtradas:', this.receitas);
+        this.recipeData = response.results || [];
+        console.log('Receitas filtradas:', this.recipeData);
       },
       (error) => {
         console.error('Erro ao buscar receitas por categoria:', error);
       }
     );
   }
-
-  // Função de pesquisa de receitas
   searchRecipes() {
     if (this.searchQuery) {
       this.spoonacularService.searchRecipes(this.searchQuery).subscribe(
         (data) => {
-          this.recipeData = data.results.map((recipe: any) => ({
-            ...recipe,
-            showInstructions: false,
-            isFavorite: false
-          }));
-          this.isFoodOptionsVisible = true;
+          if (data && data.results && Array.isArray(data.results) && data.results.length > 0) {
+            this.recipeData = data.results.map((recipe: any) => ({
+              ...recipe,
+              showInstructions: false,
+              isFavorite: false
+            }));
+            this.isFoodOptionsVisible = true;
+          } else {
+            console.log('Nenhuma receita encontrada com esses ingredientes.');
+            this.isFoodOptionsVisible = false; // Esconde as opções se nenhuma receita for encontrada
+          }
         },
         (error) => {
-          console.error('Erro ao buscar receitas:', error);
+          console.error('Erro ao buscar receitas por nome:', error);
         }
       );
     }
   }
-
-  // Função para adicionar alimentos à lista
-  addFood(food: string) {
-    if (food) {
-      this.foods.push(food);
-      this.foodInput = ''; // Limpa o campo após adicionar
+ 
+  addFood() {
+    const foodName = this.foodName.trim(); // Remover espaços antes e depois
+  
+    if (foodName) {
+      this.foods.push(foodName);
+      this.foodName = ''; // Limpa o campo de entrada após adicionar
+      console.log('Alimentos adicionados:', this.foods); // Verifique no console
     }
   }
 
-  // Função para remover alimentos da lista
+  translateFood(foodName: string) {
+    this.translateService.translateText(foodName, 'pt').subscribe(
+      (response: any) => {
+        if (response && response.data && response.data.translations && response.data.translations.length > 0) {
+          const translatedFoodName = response.data.translations[0].translatedText;
+          console.log('Alimento traduzido:', translatedFoodName);
+  
+          // Atualiza o array de alimentos com o nome traduzido
+          this.foods[this.foods.length - 1] = translatedFoodName;  // Substitui o último alimento no array
+          console.log('Alimentos após tradução:', this.foods);  // Verifique no console
+  
+          // Após a tradução, chama a função de busca de receitas
+          this.getRecipes(); // Chama a função para buscar as receitas
+        } else {
+          console.log('Nenhuma tradução encontrada para o alimento:', foodName);
+        }
+      },
+      (error: any) => {
+        console.error('Erro ao traduzir o alimento:', error);
+      }
+    );
+  }
+  
+
+
   removeFood(index: number) {
-    this.foods.splice(index, 1);
+    this.foods.splice(index, 1); // Remove o alimento da lista
   }
 
   // Função para alternar o status de favorito

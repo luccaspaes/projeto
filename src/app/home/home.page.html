@@ -40,11 +40,11 @@
       <ion-item>
         <ion-input
           placeholder="Digite o alimento"
-          [(ngModel)]="foodInput"
+          [(ngModel)]="foodName"
           clearInput
-          (keyup.enter)="addFood(foodInput)"
+          (keyup.enter)="addFood()"
         ></ion-input>
-        <ion-button color="success" fill="clear" (click)="addFood(foodInput)">
+        <ion-button color="success" fill="clear" (click)="addFood()">
           <ion-icon name="add-outline"></ion-icon>
         </ion-button>
       </ion-item>
@@ -71,7 +71,9 @@
         <ion-card>
           <ion-card-header>
             <ion-card-title>{{ recipe.translatedTitle || recipe.title }}</ion-card-title>
+            
           </ion-card-header>
+         
           <ion-card-content>
             <ion-img [src]="recipe.image" alt="{{ recipe.title }}"></ion-img>
   
