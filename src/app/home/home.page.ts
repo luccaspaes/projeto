@@ -96,18 +96,26 @@ getRecipes() {
     this.spoonacularService.getRecipesBasedOnFoods(this.foods).subscribe(
       (response) => {
         console.log('Resposta da API:', response);
-        // Certifique-se de mapear a resposta corretamente, caso a estrutura dos dados mude
-        this.recipeData = response.map((recipe: any) => ({
-          ...recipe,
-          analyzedInstructions: Array.isArray(recipe.analyzedInstructions)
-            ? recipe.analyzedInstructions.map((instruction: any) => ({
-                ...instruction,
-                steps: Array.isArray(instruction.steps) ? instruction.steps : [] // Garante que steps seja um array
-              }))
-            : [], // Garante que analyzedInstructions seja um array, mesmo se vazio
-          showInstructions: false, // Inicializa showInstructions como false para cada receita
-        }));
-        this.isFoodOptionsVisible = this.recipeData.length > 0; // Atualiza a visibilidade das opções de receitas
+
+        if (response.length === 0) {
+          console.log('Nenhuma receita encontrada para os ingredientes fornecidos.');
+          this.recipeData = [];
+          this.isFoodOptionsVisible = false;
+        } else {
+          // Mapeando a resposta e tratando as instruções e tradução do título
+          this.recipeData = response.map((recipe: any) => ({
+            ...recipe,
+            title: this.translateRecipeTitle(recipe.title), // Traduz o título
+            analyzedInstructions: Array.isArray(recipe.analyzedInstructions)
+              ? recipe.analyzedInstructions.map((instruction: any) => ({
+                  ...instruction,
+                  steps: Array.isArray(instruction.steps) ? instruction.steps : []
+                }))
+              : [],
+            showInstructions: false,
+          }));
+          this.isFoodOptionsVisible = true;
+        }
       },
       (error) => {
         console.error('Erro ao buscar receitas:', error);
@@ -118,20 +126,33 @@ getRecipes() {
   }
 }
 
+// Exemplo de tradução de título
+translateRecipeTitle(title: string): string {
+  // Aqui você pode usar um serviço de tradução como o Google Translate
+  return title; // Apenas retornando o título como está por enquanto
+}
+
+toggleInstructions(recipe: any) {
+  // Alterna entre mostrar e esconder as instruções
+  recipe.showInstructions = !recipe.showInstructions;
+}
 
 
 async togglePreparation(recipe: any) {
   recipe.showInstructions = !recipe.showInstructions;
+  
   if (recipe.showInstructions && recipe.analyzedInstructions.length > 0) {
     for (let instruction of recipe.analyzedInstructions) {
       for (let step of instruction.steps) {
-        if (!step.translatedStep) {
+        if (!step.translatedStep) {  // Verifica se já foi traduzido
           step.translatedStep = await this.translateService.translateWithDelay(step.step, 'pt').toPromise();
         }
       }
     }
   }
 }
+
+
   filterByCategory(categoria: any) {
     this.selectedCategory = categoria;
     this.spoonacularService.getRecipesByCategory(this.selectedCategory).subscribe(

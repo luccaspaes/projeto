@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { TranslateService } from './services/translate.service';
 import { TranslatePipe } from './pipes/translate.pipe';
+import { AlertController, NavController } from '@ionic/angular';
+import { AuthService } from './services/auth.service'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +11,9 @@ import { TranslatePipe } from './pipes/translate.pipe';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private translateService: TranslateService
-  ) {}
+  constructor(private translateService: TranslateService, private alertController: AlertController, private navCtrl: NavController, private authService: AuthService,  private router: Router
+  ) {
+  }
 
   showReceitas() {
 
@@ -27,4 +31,30 @@ export class AppComponent {
     );
   }
 
+  async confirmSignOut() {
+    const alert = await this.alertController.create({
+      header: 'Confirmação',
+      message: 'Deseja sair do aplicativo?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Sair',
+          handler: async () => {
+            try {
+              await this.authService.logout(); // Método do serviço AuthService
+              console.log('Usuário saiu do aplicativo');
+              this.navCtrl.navigateRoot('/login'); // Redireciona para a página de login
+            } catch (error) {
+              console.error('Erro ao fazer logout:', error);
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
 }

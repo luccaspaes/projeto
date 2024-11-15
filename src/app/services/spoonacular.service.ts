@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs'; // 'of' para criar observáveis
+import { catchError, tap } from 'rxjs/operators'; // Operadores RxJS
 
 @Injectable({
   providedIn: 'root'
@@ -21,28 +22,25 @@ export class SpoonacularService {
     return this.http.get<any>(url);
   }
 
- // spoonacular.service.ts
-getRecipesBasedOnFoods(foods: string[]): Observable<any> {
-  // Verifica se o array de alimentos não está vazio
-  if (foods.length === 0) {
-    return new Observable((observer) => {
-      observer.next({ results: [] });
-      observer.complete();
-    });
+  getRecipesBasedOnFoods(foods: string[]): Observable<any> {
+    if (foods.length === 0) {
+      console.warn('Nenhum alimento fornecido.');
+      return of([]); // Retorna um observable vazio se não houver alimentos
+    }
+  
+    const ingredients = foods.join(',');
+    const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=${this.apiKey}&ignorePantry=true`;
+  
+    console.log('URL da API:', url); // Log da URL gerada para testes
+  
+    return this.http.get<any>(url).pipe(
+      tap((response) => console.log('Resposta da API:', response)), // Log da resposta
+      catchError((error) => {
+        console.error('Erro ao acessar a API Spoonacular:', error);
+        return of([]); // Retorna um array vazio em caso de erro
+      })
+    );
   }
-
-  // Converte o array de alimentos em uma string separada por vírgulas
-  const ingredients = foods.join(',');
-
-  // URL da API com a chave da API e os alimentos na query string
-  const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=10&apiKey=${this.apiKey}&ignorePantry=true`;
-
-  // Log para depuração
-  console.log('URL da API:', url);
-
-  // Realiza a requisição à API e retorna um observable com os resultados
-  return this.http.get<any>(url);
-}
 
 
 
