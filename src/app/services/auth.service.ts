@@ -64,11 +64,9 @@ export class AuthService {
     return this.firestore.collection('users').doc(userId).valueChanges(); // Recupera os dados de um documento específico do usuário
   }
 
-  // Atualiza ou adiciona os dados nutricionais de um usuário
   updateDataNutricional(userId: string, data: any): Promise<void> {
-    return this.firestore.collection('users').doc(userId).set(data, { merge: true }); // Usa merge para não sobrescrever os dados existentes
+    return this.firestore.collection('users').doc(userId).set(data, { merge: true });
   }
-
   // Método para resetar senha usando AngularFireAuth
   resetPassword(email: string): Promise<void> {
     return this.afAuth.sendPasswordResetEmail(email);
@@ -92,4 +90,40 @@ export class AuthService {
   get user() {
     return this.afAuth.authState;
   }
+
+
+
+  getRealtimeUpdates(userId: string): Observable<any> {
+    return this.firestore
+      .collection('users')
+      .doc(userId)
+      .valueChanges(); // Retorna um Observable com os dados do documento.
+  }
+
+
+
+
+
+
+
+  addAlimentoToDatabase(alimento: any, userId: string) {
+    return this.firestore.collection(`users/${userId}/alimentos`).add(alimento);
+  }
+
+  removeAlimentoFromDatabase(alimentoId: string, userId: string) {
+    return this.firestore.doc(`users/${userId}/alimentos/${alimentoId}`).delete();
+  }
+
+  getAlimentosFromDatabase(userId: string) {
+    return this.firestore.collection(`users/${userId}/alimentos`).valueChanges({ idField: 'id' });
+  }
+
+
+
+ 
+
+
+
+
+
 }

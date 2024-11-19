@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 
 
 
+
 @Injectable({
     providedIn: 'root',
 })
@@ -25,6 +26,7 @@ export class AlimentoService {
      // Definição da variável 'nomeAlimento'
   nomeAlimento: string = '';
   alimentos: any[] = [];
+
 
     adicionarAlimento(alimento: Alimento) {
         this.alimentosAdicionados.push(alimento);

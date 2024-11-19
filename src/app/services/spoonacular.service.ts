@@ -1,7 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs'; // 'of' para criar observáveis
+import { Observable, of, map } from 'rxjs'; // 'of' para criar observáveis
 import { catchError, tap } from 'rxjs/operators'; // Operadores RxJS
+
+
+
+
+export interface Alimento {
+  id: number;
+  nome: string;  // Propriedade correta aqui
+  calorias: number;
+  carboidratos: number;
+  proteinas: number;
+  gorduras: number;
+}
+
+
+
+
+
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +29,8 @@ export class SpoonacularService {
   // URL base da API
   private apiKey = '95206646e8b2486eb8f9ddc3199b66d2';
   private apiUrl = 'https://api.spoonacular.com/recipes';
+
+  
 
  
   
@@ -71,10 +92,27 @@ searchRecipes(ingredients: string): Observable<any> {
    // Método para buscar alimentos
    buscarAlimentos(): Observable<any> {
     // A URL pode ser ajustada conforme a sua necessidade e autenticação
-    return this.http.get<any>(`${this.apiUrl}/search?query=apple&apiKey=YOUR_API_KEY`);
+    return this.http.get<any>(`${this.apiUrl}/search?query=apple&apiKey=95206646e8b2486eb8f9ddc3199b66d2`);
   }
 
 
+
+  
+    // Método para obter dados da API
+    getAlimentos(): Observable<Alimento[]> {
+      return this.http.get<any[]>('https://api.spoonacular.com/recipes').pipe(
+        map((response: any[]) => {
+          return response.map((item: any, index: number) => ({
+            id: index + 1,                // Gerando um ID único para cada alimento
+            nome: item.name || 'Desconhecido', // Supondo que o nome do alimento esteja em `item.name`, caso contrário, um nome padrão
+            calorias: item.calories,
+            carboidratos: item.carbs,
+            proteinas: item.proteins,
+            gorduras: item.fats,
+          }));
+        })
+      );
+    }
 
 
 }
