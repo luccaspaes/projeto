@@ -5,19 +5,26 @@
 </ion-header>
 
 
-<!-- Adicionar Alimento -->
-<ion-item>
-  <ion-input
-    type="text"
-    [(ngModel)]="nomeAlimento"
-    placeholder="Digite o nome do alimento"
-  ></ion-input>
-  <ion-button (click)="adicionarAlimento()" color="primary">
-    Adicionar
-  </ion-button>
-  <ion-button *ngFor="let alimento of alimentos" (click)="excluirAlimento(alimento)">Excluir</ion-button>
-</ion-item>
+<div class="add-food-container">
+  <ion-item>
+    <ion-input
+      placeholder="Digite o alimento"
+      [(ngModel)]="nomeAlimento"
+      clearInput
+      (keyup.enter)="adicionarAlimentoPorNome(nomeAlimento)"
+    ></ion-input>
+    <ion-button color="success" fill="clear" (click)="adicionarAlimentoPorNome(nomeAlimento)">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
 
+  <div class="food-tags">
+    <ion-chip *ngFor="let alimento of alimentos">
+      {{ alimento.nome }}
+      <ion-icon name="close-circle" (click)="excluirAlimento(alimento)"></ion-icon>
+    </ion-chip>
+  </div>
+</div>
 <!-- Botão para Definir Meta -->
 <ion-button expand="block" (click)="definirMeta()">Definir Meta</ion-button>
 

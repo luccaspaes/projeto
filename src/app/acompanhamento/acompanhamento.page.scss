@@ -26,8 +26,8 @@
   }
   
   ion-chip {
-    background: #f0f0f0;
-    color: #333;
+    background: var(--ion-color-light);
+    color: var(--ion-color-dark);
     --color-selected: white;
     --background-selected: #3880ff;
   }

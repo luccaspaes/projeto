@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, map } from 'rxjs'; // 'of' para criar observáveis
@@ -26,6 +27,7 @@ export interface Alimento {
   providedIn: 'root'
 })
 export class SpoonacularService {
+  private baseUrl: string = 'https://api.spoonacular.com';
   // URL base da API
   private apiKey = '95206646e8b2486eb8f9ddc3199b66d2';
   private apiUrl = 'https://api.spoonacular.com/recipes';
@@ -64,12 +66,9 @@ export class SpoonacularService {
   }
 
 
-
-    // Exemplo de função para obter dados de nutrição por ingrediente
-    getNutritionByIngredient(ingredient: string): Observable<any> {
-      return this.http.get(`${this.apiUrl}food/ingredients/search?query=${ingredient}&apiKey=${this.apiKey}`);
-    }
-  
+  getNutritionByIngredient(ingredient: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/food/ingredients/search?query=${ingredient}&apiKey=${this.apiKey}`);
+ }
     // Função para obter histórico semanal - ajuste o endpoint conforme a necessidade da API
     getWeeklyHistory(userId: string): Observable<any> {
       // Essa URL precisa ser ajustada para a endpoint correta da API Spoonacular que forneça o histórico de consumo
@@ -89,18 +88,26 @@ searchRecipes(ingredients: string): Observable<any> {
   const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodedIngredients}&number=5&apiKey=${this.apiKey}`;
   return this.http.get<any>(url);
 }
-   // Método para buscar alimentos
-   buscarAlimentos(): Observable<any> {
-    // A URL pode ser ajustada conforme a sua necessidade e autenticação
-    return this.http.get<any>(`${this.apiUrl}/search?query=apple&apiKey=95206646e8b2486eb8f9ddc3199b66d2`);
-  }
+buscarAlimentos(): Observable<any> {
+  const url = `${this.baseUrl}/food/ingredients/search?query=apple&number=10&apiKey=${this.apiKey}`;
+  return this.http.get<any>(url);
+}
+getAlimentoPorNome(nome: string): Observable<any> {
+  const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${nome}&number=5&apiKey=${this.apiKey}`;
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
 
-
-
-  
+  return this.http.get(url, { headers }).pipe(
+    catchError((error) => {
+      console.error('Erro ao buscar alimento:', error);
+      return of(null); // Retorna null para evitar quebra
+    })
+  );
+}
     // Método para obter dados da API
     getAlimentos(): Observable<Alimento[]> {
-      return this.http.get<any[]>('https://api.spoonacular.com/recipes').pipe(
+      return this.http.get<any[]>('https://api.spoonacular.com/food/ingredients/search').pipe(
         map((response: any[]) => {
           return response.map((item: any, index: number) => ({
             id: index + 1,                // Gerando um ID único para cada alimento
@@ -113,6 +120,21 @@ searchRecipes(ingredients: string): Observable<any> {
         })
       );
     }
+
+
+ 
+  // Método para obter informações nutricionais pelo ID do ingrediente
+  getInformacaoNutricional(id: number): Observable<any> {
+    const url = `${this.baseUrl}/food/ingredients/${id}/information?apiKey=${this.apiKey}`;
+    return this.http.get<any>(url).pipe(
+      tap((response) => console.log('Informações nutricionais recebidas:', response)),
+      catchError((error) => {
+        console.error('Erro ao obter informações nutricionais:', error);
+        return of(null); // Retorna null caso ocorra um erro
+      })
+    );
+  }
+
 
 
 }

@@ -3,7 +3,12 @@ import { Chart, BarController, CategoryScale, LinearScale, BarElement, Title, To
 import { AuthService } from '../services/auth.service';
 import { Alimento } from '../model/alimento';
 import { SpoonacularService } from '../services/spoonacular.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+
+
+
+
 
 Chart.register(BarController, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -13,10 +18,15 @@ Chart.register(BarController, CategoryScale, LinearScale, BarElement, Title, Too
   styleUrls: ['./acompanhamento.page.scss'],
 })
 export class AcompanhamentoPage implements OnInit, AfterViewInit {
+  
   alimentos: Alimento[] = [];
   nomeAlimento: string = '';
   userId: string = '';
   calorias: number = 0;
+  nomeIngrediente: string = ''; 
+
+  listaAlimentos: any[] = [];
+
   carboidratos: number = 0;
   proteinas: number = 0;
   gorduras: number = 0;
@@ -43,6 +53,7 @@ export class AcompanhamentoPage implements OnInit, AfterViewInit {
 
 
 
+
   ngOnInit() {
     this.userId = localStorage.getItem('userId') || '';
     if (this.userId) {
@@ -58,19 +69,37 @@ export class AcompanhamentoPage implements OnInit, AfterViewInit {
     }
     this.spotAlimentos();
   }
-  adicionarAlimento() {
-    const novoAlimento: Alimento = {
-      id: this.alimentos.length + 1,  // Gerando um ID único baseado no tamanho da lista
-      nome: 'Novo Alimento',
-      calorias: 100,
-      carboidratos: 25,
-      proteinas: 10,
-      gorduras: 5
-    };
-  
-    this.alimentos.push(novoAlimento);
-    this.atualizarMacronutrientes(novoAlimento);
+
+
+
+
+  // Função para adicionar ingrediente
+  adicionarAlimentoPorNome(nome: string) {
+    this.SpoonacularService.getAlimentoPorNome(nome).subscribe((ingrediente: any) => {
+      if (ingrediente) {
+        const id = ingrediente.id; // ID do ingrediente
+        this.SpoonacularService.getInformacaoNutricional(id).subscribe((nutricao: any) => {
+          if (nutricao) {
+            // Adiciona os dados nutricionais à lista
+            const dados = {
+              nome: ingrediente.name,
+              calorias: nutricao.nutrition.calories,
+              carboidratos: nutricao.nutrition.carbohydrates,
+              proteinas: nutricao.nutrition.protein,
+              gorduras: nutricao.nutrition.fat,
+            };
+            this.listaAlimentos.push(dados); // Adiciona à lista
+          }
+        });
+      } else {
+        console.warn('Ingrediente não encontrado.');
+      }
+    });
   }
+  
+  
+
+
 
 
 atualizarMacronutrientes(alimento: Alimento) {
