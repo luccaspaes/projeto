@@ -4,6 +4,7 @@ import { SpoonacularService } from '../services/spoonacular.service'; // Importa
 import { TranslateService } from '../services/translate.service'; // Importa o serviço de tradução
 import { Recipe } from '../model/recipe.interface'; // Importa a interface Recipe
 import { TranslatePipe } from '../pipes/translate.pipe';
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-home',
@@ -237,12 +238,16 @@ async togglePreparation(recipe: any) {
     console.log('Adicionando à lista de compras:', recipe.title);
   }
 
-  // Função para compartilhar receita
-  shareRecipe(recipe: Recipe) {
-    console.log('Compartilhando receita:', recipe.title);
+  shareRecipe(recipe: any) {
+    Share.share({
+      title: `Receita: ${recipe.title}`,
+      text: `Confira esta receita incrível de ${recipe.title}!`,
+      url: recipe.sourceUrl || window.location.href,
+      dialogTitle: 'Compartilhar Receita'
+    })
+    .then(() => console.log('Receita compartilhada com sucesso!'))
+    .catch((error) => console.error('Erro ao compartilhar receita:', error));
   }
-
-
   async testTranslation() {
     try {
       const text = 'Hello world';

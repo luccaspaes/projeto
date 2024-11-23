@@ -5,6 +5,34 @@
   padding: 16px;
 }
 
+.welcome-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+
+.logo {
+  width: 150px;
+  height: auto;
+  margin: 0 auto 15px auto;
+  display: block;
+}
+
+
+.welcome-message {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007BFF; /* Cor azul calma */
+}
+
+.welcome-subtext {
+  font-size: 16px;
+  color: #666;
+}
+
+
+
+
 h2 {
   margin-top: 20px;
   font-size: 24px;
